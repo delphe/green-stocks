@@ -1,6 +1,12 @@
 # green-stocks
 A place to get advice on which stocks are green; Companies that are known for sustainability, energy efficiency and all around better for the environment.
 
+## Launch App
+
+This app has been deployed to GitHub Pages: [https://delphe.github.io/green-stocks/](https://delphe.github.io/green-stocks/)
+
+## It's React!
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
@@ -69,3 +75,9 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `npm run build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+## Deployment
+
+Run `npm run deploy` to publish to GitHub Pages.
+
+Also, a GitHub push to the master branch will trigger deployment to GitHub Pages using [Actions](https://help.github.com/en/actions/automating-your-workflow-with-github-actions).
