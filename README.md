@@ -36,6 +36,12 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
+### `npm run deploy`
+
+This will build and publish to GitHub Pages.
+
+Also, a GitHub push to the master branch will trigger deployment to GitHub Pages using [Actions](https://help.github.com/en/actions/automating-your-workflow-with-github-actions).
+
 ### `npm run eject`
 
 **Note: this is a one-way operation. Once you `eject`, you can’t go back!**
@@ -75,9 +81,3 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `npm run build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
-
-## Deployment
-
-Run `npm run deploy` to publish to GitHub Pages.
-
-Also, a GitHub push to the master branch will trigger deployment to GitHub Pages using [Actions](https://help.github.com/en/actions/automating-your-workflow-with-github-actions).
