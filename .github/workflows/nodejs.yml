@@ -1,0 +1,45 @@
+name: Node.js CI
+
+on:
+  # Trigger the workflow on push or pull_request,
+  # but only for the master branch
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Build and Test with Node.js ${{ matrix.node-version }}
+      if: github.event_name == 'pull_request'
+      run: |
+        npm install
+        npm run build --if-present
+      env:
+        CI: true
+
+    - name: Build and Deploy
+      if: github.event_name == 'push'
+      uses: JamesIves/github-pages-deploy-action@releases/v2
+      env:
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        BASE_BRANCH: master
+        BRANCH: gh-pages
+        FOLDER: build
+        BUILD_SCRIPT: npm install && npm run build
