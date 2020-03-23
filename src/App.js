@@ -27,7 +27,7 @@ class App extends React.Component {
     this.resetState();
     this.setState({ show: true });
     try {
-      await axios.get('https://finnhub.io/api/v1/stock/profile?symbol='+symbol+'&token=bpq3prfrh5rfqccov2eg')
+      await axios.get('https://finnhub.io/api/v1/stock/profile?symbol='+symbol+'&token=')
         .then( (response) => {
           this.setState({
             name: response.data.name,
