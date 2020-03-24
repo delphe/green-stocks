@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import Navigation from './components/Navigation';
+import FormData from './components/FormData';
 import axios from 'axios';
 import { Modal, Button } from 'react-bootstrap';
 
@@ -25,9 +26,10 @@ class App extends React.Component {
 
   async handleDetailsClick(symbol) {
     this.resetState();
+    this.keyData = JSON.parse(localStorage.getItem('apikey'));
     this.setState({ show: true });
     try {
-      await axios.get('https://finnhub.io/api/v1/stock/profile?symbol='+symbol+'&token=')
+      await axios.get('https://finnhub.io/api/v1/stock/profile?symbol='+symbol+'&token='+this.keyData.apikey)
         .then( (response) => {
           this.setState({
             name: response.data.name,
@@ -107,7 +109,8 @@ class App extends React.Component {
             </Modal.Footer>
           </Modal>
         <header className="App-header">
-          <p>If you don't have a Robinhood account, feel free to use 
+          <p>Green Stocks is a consolidated list of stocks found to be environmentally friendly.</p>
+          <p>If you don't have a Robinhood account, use 
             <a href="https://join.robinhood.com/edwind329" target="_blank" rel="noopener noreferrer"> my referral link </a>
             to get a free stock!
           </p>
@@ -115,6 +118,9 @@ class App extends React.Component {
         </header>
         <div className="App-body">
           <div className="container">
+         
+            <FormData />
+            
             <div className="row">
               <div className="col-sm col-md-10 col-lg-8">
                 <h3>Energy Efficient Transportation</h3>
