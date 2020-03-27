@@ -89,8 +89,6 @@ class App extends React.Component {
         console.log("Authentication Failed!!!");
         this.setState({ 
           error: "Finnhub is not accepting your key. Please delete your API Key and re-enter it.",
-          isLoading: false,
-          show: false
         });
         break
       case 429 :
@@ -108,7 +106,9 @@ class App extends React.Component {
     }
     this.setState({ 
       isLoading: false,
-      show: false
+      symbol: '',
+      description: '',
+      targetHigh: ''
     });
   }
 
@@ -138,6 +138,12 @@ class App extends React.Component {
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
+            {this.state.error &&
+              <div className="alert alert-danger" role="alert">
+                <svg className="octicon octicon-alert" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 000 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 00.01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"></path></svg>
+                {this.state.error}
+              </div>
+            }
               {this.state.isLoading === false && this.state.description &&
                 <div>
                   <p>{this.state.description}</p>
@@ -157,7 +163,7 @@ class App extends React.Component {
                 </div>
               }
               {this.state.isLoading === false && !this.state.symbol &&
-                <p>No details found!</p>
+                <p>No data found!</p>
               }
               {this.state.isLoading === true &&
                 <div>
@@ -182,7 +188,7 @@ class App extends React.Component {
         </header>
         <div className="App-body">
           <div className="container">
-            
+
             <FinnhubAuth />
             {this.state.error &&
               <div className="alert alert-danger" role="alert">
