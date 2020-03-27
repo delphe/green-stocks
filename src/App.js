@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import Navigation from './components/Navigation';
-import FormData from './components/FormData';
+import FinnhubAuth from './components/FinnhubAuth';
 import axios from 'axios';
 import { Modal, Button } from 'react-bootstrap';
 
@@ -10,18 +10,27 @@ class App extends React.Component {
     super()
     this.handleDetailsClick = this.handleDetailsClick.bind(this);
     this.handleClose = this.handleClose.bind(this);
-    this.resetState();
-  }
-
-  resetState(){
     this.state = {
       isLoading: false,
       name:'',
       ticker:'',
       description:'',
       exchange:'',
-      weburl:''
+      weburl:'',
+      error:''
     }
+  }
+
+  resetState(){
+    this.setState({
+      isLoading: false,
+      name:'',
+      ticker:'',
+      description:'',
+      exchange:'',
+      weburl:'',
+      error:''
+    })
   }
 
   async handleDetailsClick(symbol) {
@@ -42,12 +51,28 @@ class App extends React.Component {
         }, (error) => {
           switch (error.response.status) {
             case 401 :
-              console.log("Authentication!!!");
+              console.log("Authentication Failed!!!");
+              this.setState({ 
+                error: "Finnhub is not accepting your key. Please delete your API Key and re-enter it.",
+                isLoading: false,
+                show: false
+              });
               break
             case 429 :
               console.log("RateLimitExceeded!!!");
+              this.setState({ 
+                error: "Finnhub API call limit has exceeded. Please try again later.",
+                isLoading: false,
+                show: false
+              });
               break
             default :
+              console.log("Finhub API Error!!!");
+              this.setState({ 
+                error: "An error occurred calling Finnhub API. Please try again later.",
+                isLoading: false,
+                show: false
+              });
               break
           }
         }
@@ -118,8 +143,14 @@ class App extends React.Component {
         </header>
         <div className="App-body">
           <div className="container">
-         
-            <FormData />
+              
+            <FinnhubAuth />
+            {this.state.error &&
+              <div className="alert alert-danger" role="alert">
+                <svg className="octicon octicon-alert" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 000 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 00.01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"></path></svg>
+                {this.state.error}
+              </div>
+            }
             
             <div className="row">
               <div className="col-sm col-md-10 col-lg-8">

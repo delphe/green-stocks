@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-export default class FormDataComponent extends Component {
+export default class FinnhubAuthComponent extends Component {
 
     keyData;
 
@@ -22,10 +22,6 @@ export default class FormDataComponent extends Component {
 
     onSubmit(e) {
         e.preventDefault()
-
-        this.setState({
-            apikey: ''
-        })
         this.setState({saved: true});
     }
 
@@ -40,7 +36,8 @@ export default class FormDataComponent extends Component {
             })
         } else {
             this.setState({
-                apikey: ''
+                apikey: '',
+                saved: false
             })
         }
     }
@@ -51,9 +48,8 @@ export default class FormDataComponent extends Component {
 
     clearStorage = (e) => {
         e.preventDefault();
-        console.log("Local Storage Cleared!");
         localStorage.clear();
-        this.setState({saved: false});
+        this.setState({saved: false, apikey: ''});
     };
 
     render() {
@@ -63,8 +59,9 @@ export default class FormDataComponent extends Component {
             {this.state.saved &&
             <div className="row">
                 <div className="col">
-                    <p>Using API Key from <a href="https://finnhub.io" target="_blank" rel="noopener noreferrer">Finnhub</a>.
-                        <a className="nav-link" href="#" onClick={this.clearStorage} target="_blank" rel="noopener noreferrer">Delete API Key</a>
+                    <p>
+                        Using API Key from <a href="https://finnhub.io" target="_blank" rel="noopener noreferrer">Finnhub</a>.<br/>
+                        <a href="#" onClick={this.clearStorage} target="_blank" rel="noopener noreferrer">Delete API Key</a>
                     </p>
                 </div>
             </div>
