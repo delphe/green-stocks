@@ -7,11 +7,11 @@ class Navigation extends React.Component {
         <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
             <img src={logo} height="50" width="50" alt="Green Stocks"/>
             
-            <div class="navbar navbar-fixed-top">
-                <div class="navbar-nav">
+            <div className="navbar navbar-fixed-top">
+                <div className="navbar-nav">
                     <a className="nav-link" href="https://github.com/delphe/green-stocks" target="_blank" rel="noopener noreferrer">Source Code &nbsp; </a>
                 </div>
-                <div class="navbar-nav">
+                <div className="navbar-nav">
                     <a className="nav-link" href="https://github.com/delphe/green-stocks/wiki" target="_blank" rel="noopener noreferrer">Wiki</a>
                 </div>
             </div>
