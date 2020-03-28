@@ -137,23 +137,31 @@ class FinnhubData extends React.Component {
   }
 
   finnhubErrorHandler(error){
+    this.keyData = JSON.parse(localStorage.getItem('apikey'));
+    var missing_apikey_msg;
+    if(!this.keyData.apikey || this.keyData.apikey === ''){
+      missing_apikey_msg = 'Please obtain an API Key from Finnhub.';
+    }
     switch (error.response.status) {
       case 401 :
         console.log("Authentication Failed!!!");
         this.setState({ 
-          error: "Finnhub is not accepting your key. Please delete your API Key and re-enter it.",
+          error: ' Finnhub is not accepting your key. Please delete your API Key and re-enter it. '
+           + missing_apikey_msg
         });
         break
       case 429 :
         console.log("RateLimitExceeded!!!");
         this.setState({ 
-          error: "Finnhub API call limit has exceeded. Please try again later."
+          error: ' Finnhub API call limit has exceeded! '
+           + missing_apikey_msg
         });
         break
       default :
         console.log("Finhub API Error!!!");
         this.setState({ 
-          error: "An error occurred calling Finnhub API. Please try again later."
+          error: ' An error occurred calling Finnhub API! ' 
+           + missing_apikey_msg
         });
         break
     }
@@ -240,7 +248,7 @@ class FinnhubData extends React.Component {
                 </div>
               }
               {/* Similar Stocks Data */}
-              {this.state.isLoading === false && this.state.peers &&
+              {this.state.isLoading === false && this.state.peers.length>0 &&
                 <div>
                   <p><b>Note: </b>If the link opens to a "Page not found" error, 
                     the stock is not available on Robinhood.</p>
