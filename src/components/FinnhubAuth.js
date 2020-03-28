@@ -11,25 +11,35 @@ export default class FinnhubAuthComponent extends Component {
         this.onSubmit = this.onSubmit.bind(this);
 
         this.state = {
-            apikey: ''
+            apikey: '',
+            saved: false
         }
     }
 
     // Form Events
     onChangeKey(e) {
-        this.setState({ apikey: e.target.value })
+        if(e.target.value && e.target.value != ''){
+            this.setState({ apikey: e.target.value });
+        }else{
+            this.setState({ saved: false });
+        }
     }
 
     onSubmit(e) {
         e.preventDefault()
-        this.setState({saved: true});
+        if(this.state.apikey && this.state.apikey != ''){
+            this.setState({saved: true});
+        }else{
+            this.setState({ saved: false });
+        }
+        
     }
 
     // React Life Cycle
     componentDidMount() {
         this.keyData = JSON.parse(localStorage.getItem('apikey'));
-
-        if (localStorage.getItem('apikey')) {
+        
+        if (this.keyData && this.keyData.apikey && this.keyData.apikey != '') {
             this.setState({
                 apikey: this.keyData.apikey,
                 saved: true
@@ -69,8 +79,8 @@ export default class FinnhubAuthComponent extends Component {
             }
             {!this.state.saved && 
             <div>
-                <p>For a better experience with real-time stock data, please 
-                <a href="https://finnhub.io/register" target="_blank" rel="noopener noreferrer"> obtain a FREE API Key from Finnhub</a> and enter it here:</p>
+                <p>Please <a href="https://finnhub.io/register" target="_blank" rel="noopener noreferrer">
+                    obtain a FREE API Key from Finnhub</a> and enter it here to increase the amount of data you can see:</p>
                 <div className="form-group row">
                     <div className="col-sm-6 col-md-6 col-lg-4">
                     <input type="text" className="form-control" value={this.state.apikey} onChange={this.onChangeKey} />
