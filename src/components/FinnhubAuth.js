@@ -18,7 +18,7 @@ export default class FinnhubAuthComponent extends Component {
 
     // Form Events
     onChangeKey(e) {
-        if(e.target.value && e.target.value != ''){
+        if(e.target.value && e.target.value !== ''){
             this.setState({ apikey: e.target.value });
         }else{
             this.setState({ saved: false });
@@ -27,7 +27,7 @@ export default class FinnhubAuthComponent extends Component {
 
     onSubmit(e) {
         e.preventDefault()
-        if(this.state.apikey && this.state.apikey != ''){
+        if(this.state.apikey && this.state.apikey !== ''){
             this.setState({saved: true});
         }else{
             this.setState({ saved: false });
@@ -39,7 +39,7 @@ export default class FinnhubAuthComponent extends Component {
     componentDidMount() {
         this.keyData = JSON.parse(localStorage.getItem('apikey'));
         
-        if (this.keyData && this.keyData.apikey && this.keyData.apikey != '') {
+        if (this.keyData && this.keyData.apikey && this.keyData.apikey !== '') {
             this.setState({
                 apikey: this.keyData.apikey,
                 saved: true
@@ -71,7 +71,9 @@ export default class FinnhubAuthComponent extends Component {
                 <div className="col">
                     <p>
                         Using API Key from <a href="https://finnhub.io" target="_blank" rel="noopener noreferrer">Finnhub</a>.<br/>
-                        <a href="#" onClick={this.clearStorage} target="_blank" rel="noopener noreferrer">Delete API Key</a>
+                        <button className="btn btn-light" onClick={this.clearStorage}>
+                            Delete API Key
+                        </button>
                     </p>
                 </div>
             </div>
