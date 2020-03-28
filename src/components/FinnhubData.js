@@ -14,6 +14,7 @@ class FinnhubData extends React.Component {
       description:'',
       lastUpdated:'',
       current_price:'',
+      peers: [],
       error:''
     }
   }
@@ -37,6 +38,7 @@ class FinnhubData extends React.Component {
       open_price: '',
       previous_close_price: '',
       time_stamp: '',
+      peers: [],
       error:''
     })
   }
@@ -55,6 +57,35 @@ class FinnhubData extends React.Component {
             weburl: response.data.weburl,
             symbol: response.data.ticker,
             isLoading: false
+          })
+        }, (error) => {
+          this.finnhubErrorHandler(error);
+        } )
+    } catch (e) {
+      console.log(e);
+    }   
+  }
+
+  async handlePriceQuoteClick(symbol) {
+    this.resetState();
+    this.keyData = JSON.parse(localStorage.getItem('apikey'));
+    this.setState({ show: true });
+    try {
+      await axios.get('https://finnhub.io/api/v1/quote?symbol='+symbol+'&token='+this.keyData.apikey)
+        .then( (response) => {
+          var date = new Date(response.data.t * 1000);
+          var months_arr = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+          var month = months_arr[date.getMonth()];
+          var formatted_date = month+'/'+date.getDate()+'/'+date.getFullYear()+' '+
+            date.getHours()+":"+date.getMinutes()+':'+date.getSeconds()
+          this.setState({
+            current_price: response.data.c,
+            high_price: response.data.h,
+            low_price: response.data.l,
+            open_price: response.data.o,
+            previous_close_price: response.data.pc,
+            time_stamp: formatted_date.toString(),
+            symbol: symbol
           })
         }, (error) => {
           this.finnhubErrorHandler(error);
@@ -87,27 +118,16 @@ class FinnhubData extends React.Component {
     }   
   }
 
-  async handlePriceQuoteClick(symbol) {
+  async handlePeersClick(symbol) {
     this.resetState();
     this.keyData = JSON.parse(localStorage.getItem('apikey'));
     this.setState({ show: true });
     try {
-      await axios.get('https://finnhub.io/api/v1/quote?symbol='+symbol+'&token='+this.keyData.apikey)
+      await axios.get('https://finnhub.io/api/v1/stock/peers?symbol='+symbol+'&token='+this.keyData.apikey)
         .then( (response) => {
-          var date = new Date(response.data.t * 1000);
-          var months_arr = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-          var month = months_arr[date.getMonth()];
-          var formatted_date = month+'/'+date.getDate()+'/'+date.getFullYear()+' '+
-            date.getHours()+":"+date.getMinutes()+':'+date.getSeconds()
           this.setState({
-            current_price: response.data.c,
-            high_price: response.data.h,
-            low_price: response.data.l,
-            open_price: response.data.o,
-            previous_close_price: response.data.pc,
-            time_stamp: formatted_date.toString(),
-            symbol: symbol
-          })
+            peers: response.data,
+            symbol: symbol})
         }, (error) => {
           this.finnhubErrorHandler(error);
         } )
@@ -170,12 +190,25 @@ class FinnhubData extends React.Component {
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-            {this.state.error &&
-              <div className="alert alert-danger" role="alert">
-                <svg className="octicon octicon-alert" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 000 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 00.01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"></path></svg>
-                {this.state.error}
-              </div>
-            }
+              {/* Error From API */}
+              {this.state.error &&
+                <div className="alert alert-danger" role="alert">
+                  <svg className="octicon octicon-alert" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 000 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 00.01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"></path></svg>
+                  {this.state.error}
+                </div>
+              }
+              {/* No Data */}
+              {this.state.isLoading === false && !this.state.symbol &&
+                <p>No data found!</p>
+              }
+              {/* Loading... */}
+              {this.state.isLoading === true &&
+                <div>
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  <span>Searching...</span>
+                </div>
+              }
+              {/* Details Data */}
               {this.state.isLoading === false && this.state.description &&
                 <div>
                   <p>{this.state.description}</p>
@@ -185,15 +218,7 @@ class FinnhubData extends React.Component {
                   }
                 </div>
               }
-              {this.state.isLoading === false && this.state.targetHigh &&
-                <div>
-                  <p>Last Updated: <b>{this.state.lastUpdated}</b></p>
-                  <p>Target High: <b>${this.state.targetHigh}</b></p>
-                  <p>Target Low: <b>${this.state.targetLow}</b></p>
-                  <p>Target Mean: <b>${this.state.targetMean}</b></p>
-                  <p>Target Median: <b>${this.state.targetMedian}</b></p>
-                </div>
-              }
+              {/* Price Quote Data */}
               {this.state.isLoading === false && this.state.current_price &&
                 <div>
                   <p>Last Updated: <b>{this.state.time_stamp}</b></p>
@@ -204,15 +229,31 @@ class FinnhubData extends React.Component {
                   <p>Previous close price: <b>${this.state.previous_close_price}</b></p>
                 </div>
               }
-              {this.state.isLoading === false && !this.state.symbol &&
-                <p>No data found!</p>
-              }
-              {this.state.isLoading === true &&
+              {/* Price Target Data */}
+              {this.state.isLoading === false && this.state.targetHigh &&
                 <div>
-                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                  <span>Searching...</span>
+                  <p>Last Updated: <b>{this.state.lastUpdated}</b></p>
+                  <p>Target High: <b>${this.state.targetHigh}</b></p>
+                  <p>Target Low: <b>${this.state.targetLow}</b></p>
+                  <p>Target Mean: <b>${this.state.targetMean}</b></p>
+                  <p>Target Median: <b>${this.state.targetMedian}</b></p>
                 </div>
               }
+              {/* Similar Stocks Data */}
+              {this.state.isLoading === false && this.state.peers &&
+                <div>
+                  <p><b>Note: </b>If the link opens to a "Page not found" error, 
+                    the stock is not available on Robinhood.</p>
+                  {this.state.peers.map(symbol => 
+                    <ul>
+                      <li><a href={'https://robinhood.com/stocks/'+symbol} target="_blank" rel="noopener noreferrer">
+                        {symbol}
+                      </a></li>
+                    </ul>
+                  )}
+                </div>
+              }
+              
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={this.handleClose}>
@@ -231,7 +272,11 @@ class FinnhubData extends React.Component {
           &nbsp;
           <Button variant="primary" onClick={() => this.handlePriceTargetClick(this.props.symbol)}>
             Price Target
-          </Button>          
+          </Button>
+          &nbsp;
+          <Button variant="primary" onClick={() => this.handlePeersClick(this.props.symbol)}>
+            Similar Stocks
+          </Button>
         </>
       </div>
     );
