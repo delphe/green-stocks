@@ -3,8 +3,19 @@ import axios from 'axios';
 import { Modal, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
+/**
+ * Displays available buttons for a stock.
+ * When pressed, a modal window opens and displays results from the Finnhub API
+ * @component
+ * @example
+ * const symbol = 'TSLA'
+ */
 class FinnhubData extends React.Component {
+  
   static propTypes = {
+    /**
+     * Stock Symbol. Example: TSLA
+     */
     symbol: PropTypes.string.isRequired
   }
   constructor () {
@@ -22,7 +33,10 @@ class FinnhubData extends React.Component {
       error:''
     }
   }
-
+  /**
+   * reset all data saved to state back to default values 
+   * to prevent old data from being displayed when modal is reopened
+   */
   resetState(){
     this.setState({
       isLoading: false,
@@ -47,6 +61,11 @@ class FinnhubData extends React.Component {
     })
   }
 
+  /**
+   * Details button used to call Finnhub API and return stock profile data
+   * in the modal window.
+   * @param  {} symbol stock symbol. example: TSLA
+   */
   async handleDetailsClick(symbol) {
     this.resetState();
     this.keyData = JSON.parse(localStorage.getItem('apikey'));
@@ -70,6 +89,11 @@ class FinnhubData extends React.Component {
     }   
   }
 
+  /**
+   * Price Quote button used to call Finnhub API and return price quote data
+   * in the modal window.
+   * @param  {} symbol stock symbol. example: TSLA
+   */
   async handlePriceQuoteClick(symbol) {
     this.resetState();
     this.keyData = JSON.parse(localStorage.getItem('apikey'));
@@ -99,6 +123,11 @@ class FinnhubData extends React.Component {
     }   
   }
 
+  /**
+   * Price Target button used to call Finnhub API and return stock price-target data
+   * in the modal window.
+   * @param  {} symbol stock symbol. example: TSLA
+   */
   async handlePriceTargetClick(symbol) {
     this.resetState();
     this.keyData = JSON.parse(localStorage.getItem('apikey'));
@@ -122,6 +151,11 @@ class FinnhubData extends React.Component {
     }   
   }
 
+  /**
+   * Similar Stocks button used to call Finnhub API and return peers as an array,
+   * which renders as a list in the modal window.
+   * @param  {} symbol stock symbol. example: TSLA
+   */
   async handlePeersClick(symbol) {
     this.resetState();
     this.keyData = JSON.parse(localStorage.getItem('apikey'));
@@ -139,7 +173,15 @@ class FinnhubData extends React.Component {
       console.log(e);
     }   
   }
-
+  
+  /**
+   * set error state as an error message depending on what error status is received.
+   * @example
+   * 401 - Authentication failure
+   * 429 - Rate Limit Exceeded
+   * default - 'Other status codes return a default error message'
+   * @param  {} error api error response from Finnhub
+   */
   finnhubErrorHandler(error){
     this.keyData = JSON.parse(localStorage.getItem('apikey'));
     var missing_apikey_msg;
@@ -176,11 +218,17 @@ class FinnhubData extends React.Component {
       targetHigh: ''
     });
   }
-
+  /**
+   * close the modal window
+   */
   handleClose() {
 		this.setState({ show: false });
   }
   
+  /**
+   * render the HTML for this component, 
+   * containing buttons and modal window for Finnhub data
+   */
   render() {
     return (
       <div>
@@ -295,9 +343,5 @@ class FinnhubData extends React.Component {
   }
 
 }
-
-// FinnhubData.propTypes = {
-//   symbol: PropTypes.string.isRequired
-// };
 
 export default FinnhubData;

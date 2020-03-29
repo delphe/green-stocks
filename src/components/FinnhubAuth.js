@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
 
+/**
+ * Allows the user to add the API Key for Finnhub to local storage,
+ * which prevent the need of re-entering the key even when the browser
+ * has been closed
+ */
 export default class FinnhubAuthComponent extends Component {
 
     constructor(props) {
@@ -14,7 +19,10 @@ export default class FinnhubAuthComponent extends Component {
         }
     }
 
-    // Form Events
+    /**
+     * set state for apikey only if input field is not empty 
+     * @param  {} e event containing API Key from input text
+     */
     onChangeKey(e) {
         if(e.target.value && e.target.value !== ''){
             this.setState({ apikey: e.target.value });
@@ -23,6 +31,11 @@ export default class FinnhubAuthComponent extends Component {
         }
     }
 
+    /**
+     * set saved state as true when apikey has been saved to the state 
+     * and is not an empty value
+     * @param  {} e event of Use Key button 
+     */
     onSubmit(e) {
         e.preventDefault()
         if(this.state.apikey && this.state.apikey !== ''){
@@ -32,7 +45,10 @@ export default class FinnhubAuthComponent extends Component {
         }
     }
 
-    // React Life Cycle
+    /**
+     * React Life Cycle. Locates apikey from local storage when the component mounts 
+     * and sets the saved state as true if they apikey is not an empty value
+     */
     componentDidMount() {
         this.keyData = JSON.parse(localStorage.getItem('apikey'));
         if (this.keyData && this.keyData.apikey && this.keyData.apikey !== '') {
@@ -48,16 +64,28 @@ export default class FinnhubAuthComponent extends Component {
         }
     }
 
-    UNSAFE_componentWillUpdate(nextProps, nextState) {
+    /**
+     * adds the apikey state to local storage
+     * @param  {} _nextProps not used
+     * @param  {} nextState locates apikey state of this component
+     */
+    UNSAFE_componentWillUpdate(_nextProps, nextState) {
         localStorage.setItem('apikey', JSON.stringify(nextState));
     }
 
+    /**
+     * remove apikey from local storage and set the state to default values
+     * @param  {} e event of Delete API Key button
+     */
     clearStorage = (e) => {
         e.preventDefault();
         localStorage.clear();
         this.setState({saved: false, apikey: ''});
     };
 
+    /**
+     * render the HTML for this component
+     */
     render() {
         return (
             <form onSubmit={this.onSubmit}>

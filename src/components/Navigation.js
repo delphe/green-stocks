@@ -1,6 +1,9 @@
 import React from 'react';
 import logo from '../logo.svg'
 
+/**
+ * Navigation header at top of page
+ */
 class Navigation extends React.Component {
   render(){
       return (
