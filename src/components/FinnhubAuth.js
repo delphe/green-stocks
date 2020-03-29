@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 
 export default class FinnhubAuthComponent extends Component {
 
-    keyData;
-
     constructor(props) {
         super(props);
 
@@ -32,13 +30,11 @@ export default class FinnhubAuthComponent extends Component {
         }else{
             this.setState({ saved: false });
         }
-        
     }
 
     // React Life Cycle
     componentDidMount() {
         this.keyData = JSON.parse(localStorage.getItem('apikey'));
-        
         if (this.keyData && this.keyData.apikey && this.keyData.apikey !== '') {
             this.setState({
                 apikey: this.keyData.apikey,
@@ -52,7 +48,7 @@ export default class FinnhubAuthComponent extends Component {
         }
     }
 
-    componentWillUpdate(nextProps, nextState) {
+    UNSAFE_componentWillUpdate(nextProps, nextState) {
         localStorage.setItem('apikey', JSON.stringify(nextState));
     }
 
@@ -64,7 +60,6 @@ export default class FinnhubAuthComponent extends Component {
 
     render() {
         return (
-            
             <form onSubmit={this.onSubmit}>
             {this.state.saved &&
             <div className="row">

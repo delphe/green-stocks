@@ -1,8 +1,12 @@
 import React from 'react';
 import axios from 'axios';
 import { Modal, Button } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 class FinnhubData extends React.Component {
+  static propTypes = {
+    symbol: PropTypes.string.isRequired
+  }
   constructor () {
     super()
     this.handleDetailsClick = this.handleDetailsClick.bind(this);
@@ -201,7 +205,7 @@ class FinnhubData extends React.Component {
               {/* Error From API */}
               {this.state.error &&
                 <div className="alert alert-danger" role="alert">
-                  <svg className="octicon octicon-alert" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 000 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 00.01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"></path></svg>
+                  <svg className="octicon octicon-alert" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fillRule="evenodd" d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 000 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 00.01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"></path></svg>
                   {this.state.error}
                 </div>
               }
@@ -212,7 +216,7 @@ class FinnhubData extends React.Component {
               {/* Loading... */}
               {this.state.isLoading === true &&
                 <div>
-                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                   <span>Searching...</span>
                 </div>
               }
@@ -250,10 +254,10 @@ class FinnhubData extends React.Component {
               {/* Similar Stocks Data */}
               {this.state.isLoading === false && this.state.peers.length>0 &&
                 <div>
-                  <p><b>Note: </b>If the link opens to a "Page not found" error, 
+                  <p><b>Note: </b>If the link opens to a &quot;Page not found&quot; error, 
                     the stock is not available on Robinhood.</p>
                   {this.state.peers.map(symbol => 
-                    <ul>
+                    <ul key={symbol}>
                       <li><a href={'https://robinhood.com/stocks/'+symbol} target="_blank" rel="noopener noreferrer">
                         {symbol}
                       </a></li>
@@ -291,5 +295,9 @@ class FinnhubData extends React.Component {
   }
 
 }
+
+// FinnhubData.propTypes = {
+//   symbol: PropTypes.string.isRequired
+// };
 
 export default FinnhubData;
