@@ -1,8 +1,23 @@
 import React from 'react';
 import axios from 'axios';
 import { Modal, Button } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
+/**
+ * Displays available buttons for a stock.
+ * When pressed, a modal window opens and displays results from the Finnhub API
+ * @component
+ * @example
+ * const symbol = 'TSLA'
+ */
 class FinnhubData extends React.Component {
+  
+  static propTypes = {
+    /**
+     * Stock Symbol. Example: TSLA
+     */
+    symbol: PropTypes.string.isRequired
+  }
   constructor () {
     super()
     this.handleDetailsClick = this.handleDetailsClick.bind(this);
@@ -18,7 +33,10 @@ class FinnhubData extends React.Component {
       error:''
     }
   }
-
+  /**
+   * reset all data saved to state back to default values 
+   * to prevent old data from being displayed when modal is reopened
+   */
   resetState(){
     this.setState({
       isLoading: false,
@@ -43,6 +61,11 @@ class FinnhubData extends React.Component {
     })
   }
 
+  /**
+   * Details button used to call Finnhub API and return stock profile data
+   * in the modal window.
+   * @param  {} symbol stock symbol. example: TSLA
+   */
   async handleDetailsClick(symbol) {
     this.resetState();
     this.keyData = JSON.parse(localStorage.getItem('apikey'));
@@ -66,6 +89,11 @@ class FinnhubData extends React.Component {
     }   
   }
 
+  /**
+   * Price Quote button used to call Finnhub API and return price quote data
+   * in the modal window.
+   * @param  {} symbol stock symbol. example: TSLA
+   */
   async handlePriceQuoteClick(symbol) {
     this.resetState();
     this.keyData = JSON.parse(localStorage.getItem('apikey'));
@@ -95,6 +123,11 @@ class FinnhubData extends React.Component {
     }   
   }
 
+  /**
+   * Price Target button used to call Finnhub API and return stock price-target data
+   * in the modal window.
+   * @param  {} symbol stock symbol. example: TSLA
+   */
   async handlePriceTargetClick(symbol) {
     this.resetState();
     this.keyData = JSON.parse(localStorage.getItem('apikey'));
@@ -118,6 +151,11 @@ class FinnhubData extends React.Component {
     }   
   }
 
+  /**
+   * Similar Stocks button used to call Finnhub API and return peers as an array,
+   * which renders as a list in the modal window.
+   * @param  {} symbol stock symbol. example: TSLA
+   */
   async handlePeersClick(symbol) {
     this.resetState();
     this.keyData = JSON.parse(localStorage.getItem('apikey'));
@@ -135,7 +173,15 @@ class FinnhubData extends React.Component {
       console.log(e);
     }   
   }
-
+  
+  /**
+   * set error state as an error message depending on what error status is received.
+   * @example
+   * 401 - Authentication failure
+   * 429 - Rate Limit Exceeded
+   * default - 'Other status codes return a default error message'
+   * @param  {} error api error response from Finnhub
+   */
   finnhubErrorHandler(error){
     this.keyData = JSON.parse(localStorage.getItem('apikey'));
     var missing_apikey_msg;
@@ -172,11 +218,17 @@ class FinnhubData extends React.Component {
       targetHigh: ''
     });
   }
-
+  /**
+   * close the modal window
+   */
   handleClose() {
 		this.setState({ show: false });
   }
   
+  /**
+   * render the HTML for this component, 
+   * containing buttons and modal window for Finnhub data
+   */
   render() {
     return (
       <div>
@@ -201,7 +253,7 @@ class FinnhubData extends React.Component {
               {/* Error From API */}
               {this.state.error &&
                 <div className="alert alert-danger" role="alert">
-                  <svg className="octicon octicon-alert" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 000 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 00.01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"></path></svg>
+                  <svg className="octicon octicon-alert" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fillRule="evenodd" d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 000 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 00.01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"></path></svg>
                   {this.state.error}
                 </div>
               }
@@ -212,7 +264,7 @@ class FinnhubData extends React.Component {
               {/* Loading... */}
               {this.state.isLoading === true &&
                 <div>
-                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                   <span>Searching...</span>
                 </div>
               }
@@ -250,10 +302,10 @@ class FinnhubData extends React.Component {
               {/* Similar Stocks Data */}
               {this.state.isLoading === false && this.state.peers.length>0 &&
                 <div>
-                  <p><b>Note: </b>If the link opens to a "Page not found" error, 
+                  <p><b>Note: </b>If the link opens to a &quot;Page not found&quot; error, 
                     the stock is not available on Robinhood.</p>
                   {this.state.peers.map(symbol => 
-                    <ul>
+                    <ul key={symbol}>
                       <li><a href={'https://robinhood.com/stocks/'+symbol} target="_blank" rel="noopener noreferrer">
                         {symbol}
                       </a></li>
