@@ -282,7 +282,7 @@ class FinnhubData extends React.Component {
               {this.state.isLoading === false && this.state.current_price &&
                 <div>
                   <p>Last Updated: <b>{this.state.time_stamp}</b></p>
-                  <p>Current Stock Price: <b>{this.state.current_price}</b></p>
+                  <p>Current Stock Price: <b>${this.state.current_price}</b></p>
                   <p>Highest price of the day: <b>${this.state.high_price}</b></p>
                   <p>Lowest price of the day: <b>${this.state.low_price}</b></p>
                   <p>Opening price of the day: <b>${this.state.open_price}</b></p>
