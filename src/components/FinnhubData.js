@@ -322,19 +322,22 @@ class FinnhubData extends React.Component {
             </Modal.Footer>
           </Modal>
 
-          <Button variant="primary" onClick={() => this.handleDetailsClick(this.props.symbol)}>
+          <Button style={{marginTop: '5px'}} variant="primary" onClick={() => this.handleDetailsClick(this.props.symbol)}>
             Details
           </Button>
           &nbsp;
-          <Button variant="primary" onClick={() => this.handlePriceQuoteClick(this.props.symbol)}>
+          <Button style={{marginTop: '5px'}} variant="primary" 
+            onClick={() => this.handlePriceQuoteClick(this.props.symbol)}>
             Price Quote
           </Button>
           &nbsp;
-          <Button variant="primary" onClick={() => this.handlePriceTargetClick(this.props.symbol)}>
+          <Button style={{marginTop: '5px'}} variant="primary" 
+            onClick={() => this.handlePriceTargetClick(this.props.symbol)}>
             Price Target
           </Button>
           &nbsp;
-          <Button variant="primary" onClick={() => this.handlePeersClick(this.props.symbol)}>
+          <Button style={{marginTop: '5px'}} variant="primary" 
+            onClick={() => this.handlePeersClick(this.props.symbol)}>
             Similar Stocks
           </Button>
         </>
