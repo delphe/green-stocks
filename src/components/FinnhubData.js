@@ -30,6 +30,7 @@ class FinnhubData extends React.Component {
       lastUpdated:'',
       current_price:'',
       peers: [],
+      buy: null,
       error:''
     }
   }
@@ -56,6 +57,7 @@ class FinnhubData extends React.Component {
       open_price: '',
       previous_close_price: '',
       time_stamp: '',
+      buy: null,
       peers: [],
       error:''
     })
@@ -165,6 +167,38 @@ class FinnhubData extends React.Component {
         .then( (response) => {
           this.setState({
             peers: response.data,
+            symbol: symbol})
+        }, (error) => {
+          this.finnhubErrorHandler(error);
+        } )
+    } catch (e) {
+      console.log(e);
+    }   
+  }
+
+  /**
+   * Recommendation button used to call Finnhub API and return recommendations as an array,
+   * which renders in the modal window.
+   * @param  {} symbol stock symbol. example: TSLA
+   */
+  async handleRecommendationClick(symbol) {
+    this.resetState();
+    this.keyData = JSON.parse(localStorage.getItem('apikey'));
+    this.setState({ show: true });
+    try {
+      await axios.get('https://finnhub.io/api/v1/stock/recommendation?symbol='+symbol+'&token='+this.keyData.apikey)
+        .then( (response) => {
+          var totalAnalysts = response.data[0].buy + response.data[0].sell + response.data[0].hold;
+          this.setState({
+            buy: response.data[0].buy,
+            buyPercentage: parseFloat(response.data[0].buy/totalAnalysts*100).toFixed(1)+"%",
+            hold: response.data[0].hold,
+            holdPercentage: parseFloat(response.data[0].hold/totalAnalysts*100).toFixed(1)+"%",
+            sell: response.data[0].sell,
+            sellPercentage: parseFloat(response.data[0].sell/totalAnalysts*100).toFixed(1)+"%",
+            strongBuy: response.data[0].strongBuy,
+            strongSell: response.data[0].strongSell,
+            period: response.data[0].period,
             symbol: symbol})
         }, (error) => {
           this.finnhubErrorHandler(error);
@@ -313,6 +347,17 @@ class FinnhubData extends React.Component {
                   )}
                 </div>
               }
+              {/* Recommendation Data */}
+              {this.state.isLoading === false && this.state.buy != null &&
+                <div>
+                  <p>Last Updated: <b>{this.state.period}</b></p>
+                  <p>Buy: <b>{this.state.buy} - {this.state.buyPercentage}</b></p>
+                  <p>Sell: <b>{this.state.sell} - {this.state.sellPercentage}</b></p>
+                  <p>Hold: <b>{this.state.hold} - {this.state.holdPercentage}</b></p>
+                  <p>Strong Buy: <b>{this.state.strongBuy}</b></p>
+                  <p>Strong Sell: <b>{this.state.strongSell}</b></p>
+                </div>
+              }              
               
             </Modal.Body>
             <Modal.Footer>
@@ -322,20 +367,28 @@ class FinnhubData extends React.Component {
             </Modal.Footer>
           </Modal>
 
-          <Button variant="primary" onClick={() => this.handleDetailsClick(this.props.symbol)}>
+          <Button style={{marginTop: '5px'}} variant="primary" onClick={() => this.handleDetailsClick(this.props.symbol)}>
             Details
           </Button>
           &nbsp;
-          <Button variant="primary" onClick={() => this.handlePriceQuoteClick(this.props.symbol)}>
+          <Button style={{marginTop: '5px'}} variant="primary" 
+            onClick={() => this.handlePriceQuoteClick(this.props.symbol)}>
             Price Quote
           </Button>
           &nbsp;
-          <Button variant="primary" onClick={() => this.handlePriceTargetClick(this.props.symbol)}>
+          <Button style={{marginTop: '5px'}} variant="primary" 
+            onClick={() => this.handlePriceTargetClick(this.props.symbol)}>
             Price Target
           </Button>
           &nbsp;
-          <Button variant="primary" onClick={() => this.handlePeersClick(this.props.symbol)}>
+          <Button style={{marginTop: '5px'}} variant="primary" 
+            onClick={() => this.handlePeersClick(this.props.symbol)}>
             Similar Stocks
+          </Button>
+          &nbsp;
+          <Button style={{marginTop: '5px'}} variant="primary" 
+            onClick={() => this.handleRecommendationClick(this.props.symbol)}>
+            Recommendation
           </Button>
         </>
       </div>
