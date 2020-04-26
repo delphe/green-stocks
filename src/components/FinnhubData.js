@@ -71,7 +71,7 @@ class FinnhubData extends React.Component {
   async handleDetailsClick(symbol) {
     this.resetState();
     this.keyData = JSON.parse(localStorage.getItem('apikey'));
-    this.setState({ show: true });
+    this.setState({ show: true, isLoading: true });
     try {
       await axios.get('https://finnhub.io/api/v1/stock/profile?symbol='+symbol+'&token='+this.keyData.apikey)
         .then( (response) => {
@@ -99,7 +99,7 @@ class FinnhubData extends React.Component {
   async handlePriceQuoteClick(symbol) {
     this.resetState();
     this.keyData = JSON.parse(localStorage.getItem('apikey'));
-    this.setState({ show: true });
+    this.setState({ show: true, isLoading: true });
     try {
       await axios.get('https://finnhub.io/api/v1/quote?symbol='+symbol+'&token='+this.keyData.apikey)
         .then( (response) => {
@@ -115,7 +115,8 @@ class FinnhubData extends React.Component {
             open_price: response.data.o,
             previous_close_price: response.data.pc,
             time_stamp: formatted_date.toString(),
-            symbol: symbol
+            symbol: symbol,
+            isLoading: false
           })
         }, (error) => {
           this.finnhubErrorHandler(error);
@@ -133,7 +134,7 @@ class FinnhubData extends React.Component {
   async handlePriceTargetClick(symbol) {
     this.resetState();
     this.keyData = JSON.parse(localStorage.getItem('apikey'));
-    this.setState({ show: true });
+    this.setState({ show: true, isLoading: true });
     try {
       await axios.get('https://finnhub.io/api/v1/stock/price-target?symbol='+symbol+'&token='+this.keyData.apikey)
         .then( (response) => {
@@ -143,7 +144,8 @@ class FinnhubData extends React.Component {
             targetHigh: response.data.targetHigh,
             targetLow: response.data.targetLow,
             targetMean: response.data.targetMean,
-            targetMedian: response.data.targetMedian
+            targetMedian: response.data.targetMedian,
+            isLoading: false
           })
         }, (error) => {
           this.finnhubErrorHandler(error);
@@ -161,13 +163,14 @@ class FinnhubData extends React.Component {
   async handlePeersClick(symbol) {
     this.resetState();
     this.keyData = JSON.parse(localStorage.getItem('apikey'));
-    this.setState({ show: true });
+    this.setState({ show: true, isLoading: true });
     try {
       await axios.get('https://finnhub.io/api/v1/stock/peers?symbol='+symbol+'&token='+this.keyData.apikey)
         .then( (response) => {
           this.setState({
             peers: response.data,
-            symbol: symbol})
+            symbol: symbol,
+            isLoading: false})
         }, (error) => {
           this.finnhubErrorHandler(error);
         } )
@@ -184,7 +187,7 @@ class FinnhubData extends React.Component {
   async handleRecommendationClick(symbol) {
     this.resetState();
     this.keyData = JSON.parse(localStorage.getItem('apikey'));
-    this.setState({ show: true });
+    this.setState({ show: true, isLoading: true });
     try {
       await axios.get('https://finnhub.io/api/v1/stock/recommendation?symbol='+symbol+'&token='+this.keyData.apikey)
         .then( (response) => {
@@ -199,7 +202,8 @@ class FinnhubData extends React.Component {
             strongBuy: response.data[0].strongBuy,
             strongSell: response.data[0].strongSell,
             period: response.data[0].period,
-            symbol: symbol})
+            symbol: symbol,
+            isLoading: false})
         }, (error) => {
           this.finnhubErrorHandler(error);
         } )
@@ -218,6 +222,7 @@ class FinnhubData extends React.Component {
    */
   finnhubErrorHandler(error){
     this.keyData = JSON.parse(localStorage.getItem('apikey'));
+    var error_msg;
     var missing_apikey_msg;
     if(!this.keyData.apikey || this.keyData.apikey === ''){
       missing_apikey_msg = 'Please obtain an API Key from Finnhub.';
@@ -225,33 +230,26 @@ class FinnhubData extends React.Component {
     switch (error.response.status) {
       case 401 :
         console.log("Authentication Failed!!!");
-        this.setState({ 
-          error: ' Finnhub is not accepting your key. Please delete your API Key and re-enter it. '
-           + missing_apikey_msg
-        });
+        error_msg = ' Finnhub is not accepting your key. Please delete your API Key and re-enter it. '
+           + missing_apikey_msg;
         break
       case 429 :
         console.log("RateLimitExceeded!!!");
-        this.setState({ 
-          error: ' Finnhub API call limit has exceeded! '
-           + missing_apikey_msg
-        });
+        error_msg = ' Finnhub API call limit has exceeded! '
+           + missing_apikey_msg;
         break
       default :
         console.log("Finhub API Error!!!");
-        this.setState({ 
-          error: ' An error occurred calling Finnhub API! ' 
-           + missing_apikey_msg
-        });
+        error_msg = ' An error occurred calling Finnhub API! ' 
+           + missing_apikey_msg;
         break
     }
+    this.resetState();
     this.setState({ 
-      isLoading: false,
-      symbol: '',
-      description: '',
-      targetHigh: ''
+      error: error_msg
     });
   }
+
   /**
    * close the modal window
    */
@@ -367,10 +365,11 @@ class FinnhubData extends React.Component {
             </Modal.Footer>
           </Modal>
 
-          <Button style={{marginTop: '5px'}} variant="primary" onClick={() => this.handleDetailsClick(this.props.symbol)}>
+          {/* Details now require a premium account! */}
+          {/* <Button style={{marginTop: '5px'}} variant="primary" onClick={() => this.handleDetailsClick(this.props.symbol)}>
             Details
           </Button>
-          &nbsp;
+          &nbsp; */}
           <Button style={{marginTop: '5px'}} variant="primary" 
             onClick={() => this.handlePriceQuoteClick(this.props.symbol)}>
             Price Quote

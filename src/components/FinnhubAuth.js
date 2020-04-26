@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import FinnhubR13s from './FinnhubR13s';
 /**
  * Allows the user to add the API Key for Finnhub to local storage,
  * which prevent the need of re-entering the key even when the browser
@@ -90,8 +90,10 @@ export default class FinnhubAuthComponent extends Component {
         return (
             <form onSubmit={this.onSubmit}>
             {this.state.saved &&
+
             <div className="row">
-                <div className="col">
+                <div className="col-sm-6"><FinnhubR13s /></div>
+                <div className="col-sm-6">
                     <p>
                         Using API Key from <a href="https://finnhub.io" target="_blank" rel="noopener noreferrer">Finnhub</a>.<br/>
                         <button className="btn btn-light" onClick={this.clearStorage}>
@@ -99,8 +101,7 @@ export default class FinnhubAuthComponent extends Component {
                         </button>
                     </p>
                 </div>
-            </div>
-                
+            </div>                
             }
             {!this.state.saved && 
             <div>
