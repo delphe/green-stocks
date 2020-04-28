@@ -146,7 +146,7 @@ class FinnhubR13s extends React.Component {
                 <div>
                   {this.state.r13s.map((r12n) => (
                     <div key={this.state.r13s.symbol}>
-                      <h3><a href={'https://robinhood.com/stocks/'+symbol} target="_blank" rel="noopener noreferrer">
+                      <h3><a href={'https://robinhood.com/stocks/'+r12n.symbol} target="_blank" rel="noopener noreferrer">
 	    		{r12n.symbol}</a></h3>
 
                       {/* Error when using this symbol */}
