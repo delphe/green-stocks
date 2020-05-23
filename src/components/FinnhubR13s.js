@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { Modal, Button } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 /**
  * Displays Recommendations button.
@@ -9,9 +10,15 @@ import { Modal, Button } from 'react-bootstrap';
  * Note: R13s is short for Recommendations. I'm sure you can guess what R12n stands for. 
  * @component
  * @example
- * const symbol = 'TSLA'
+ * const stocklist = 'yahoo'
  */
 class FinnhubR13s extends React.Component {
+  static propTypes = {
+    /**
+     * Which Type of Stock List to use. Example: yahoo or finnhub
+     */
+    stocklist: PropTypes.string.isRequired
+  }
   constructor () {
     super()
     this.handleClose = this.handleClose.bind(this);
@@ -19,6 +26,8 @@ class FinnhubR13s extends React.Component {
       isLoading: false,
       buy: null,
       r13s: [],
+      yahoo_stocks: ['CI','KOF','NGG','LBRDA','ET','FOXA','ACGLO','YNDX','TEVA','ZG','MT','IHG','MBT','WRK','SQM','CIB','CLR','ZION','AVAL','XRX','WPX','VEON','TGNA'],
+      // Listed on Finnhub but not Robinhood: 'WFC-PY','BRK-A','NYCB-PA','KIM-PL','NLY-PF','FRC-PH','DLR-PJ'
       finnhub_stocks: ['TSLA','NIO','FCEL','ENS','GE','FSLR','VSLR','JKS','SPWR','SEDG','RUN','ENPH','NOVA','AWK','IDA','XLY','PCG','BEP','UNFI','CVA','FTEK'],
       //TODO: find another API that can lookup these other stocks
       other_stocks: ['BLDP','PCRFY','VWDRY','NEP','FAN','TAN','ORA','EVX','PZD']
@@ -40,30 +49,54 @@ class FinnhubR13s extends React.Component {
    * Recommendations button used to call Finnhub API and return recommendations as an array,
    * which renders in the modal window.
    */
-  async handleRecommendationsClick() {
+  async handleRecommendationsClick(stocklist) {
+    let stock_array = [];
+    if (stocklist === 'finnhub') {
+      stock_array = this.state.finnhub_stocks;
+    } else {
+      stock_array = this.state.yahoo_stocks;
+    }
     this.resetState();
     this.setState({ show: true, isLoading: true });
     var keyData = JSON.parse(localStorage.getItem('apikey'));
     var r13sObj = [];
-    for (const [,symbol] of this.state.finnhub_stocks.entries()) {
+    for (const [,symbol] of stock_array.entries()) {
       try {
         await axios.get('https://finnhub.io/api/v1/stock/recommendation?symbol='+symbol+'&token='+keyData.apikey)
           .then( (response) => {
-            var totalAnalysts = response.data[0].buy + response.data[0].sell + response.data[0].hold;
-            r13sObj.push({
-              symbol: symbol,
-              buy: response.data[0].buy,
-              buyPercentNum: response.data[0].buy/totalAnalysts,
-              buyPercentage: parseFloat(response.data[0].buy/totalAnalysts*100).toFixed(1)+"%",
-              hold: response.data[0].hold,
-              holdPercentage: parseFloat(response.data[0].hold/totalAnalysts*100).toFixed(1)+"%",
-              sell: response.data[0].sell,
-              sellPercentage: parseFloat(response.data[0].sell/totalAnalysts*100).toFixed(1)+"%",
-              strongBuy: response.data[0].strongBuy,
-              strongSell: response.data[0].strongSell,
-              period: response.data[0].period,
-              error: null
-            })
+            if (response.data.length>0) {
+              var totalAnalysts = response.data[0].buy + response.data[0].sell + response.data[0].hold;
+              r13sObj.push({
+                symbol: symbol,
+                buy: response.data[0].buy,
+                buyPercentNum: this.divide(response.data[0].buy, totalAnalysts),
+                buyPercentage: parseFloat(this.divide(response.data[0].buy, totalAnalysts)*100).toFixed(1)+"%",
+                hold: response.data[0].hold,
+                holdPercentage: parseFloat(this.divide(response.data[0].hold, totalAnalysts)*100).toFixed(1)+"%",
+                sell: response.data[0].sell,
+                sellPercentage: parseFloat(this.divide(response.data[0].sell, totalAnalysts)*100).toFixed(1)+"%",
+                strongBuy: response.data[0].strongBuy,
+                strongSell: response.data[0].strongSell,
+                period: response.data[0].period,
+                error: null
+              })
+            } else {
+              r13sObj.push({
+                symbol: symbol,
+                buy: 0,
+                buyPercentNum: 0,
+                buyPercentage: '0%',
+                hold: 0,
+                holdPercentage: '0%',
+                sell: 0,
+                sellPercentage: '0%',
+                strongBuy: 0,
+                strongSell: 0,
+                period: 0,
+                error: null
+              })
+            }
+            
           }, (error) => {
             r13sObj.push({
               symbol: symbol,
@@ -78,10 +111,25 @@ class FinnhubR13s extends React.Component {
 
     //Sorting by the highest percentage of buy recommendations
     this.state.r13s = [...r13sObj];
-    this.state.r13s.sort((b,a) => a.buyPercentNum - b.buyPercentNum);
-
+    this.state.r13s.sort((b,a) => 
+      a.buyPercentNum - b.buyPercentNum || 
+      a.strongBuy - b.strongBuy ||
+      a.hold - b.hold);
     this.setState({ isLoading: false })
   }  
+
+  /**
+   * If the denominator is 0, just return 0
+   * @param {*} numerator should be a valid number
+   * @param {*} denominator should be a valid number
+   */
+  divide(numerator, denominator){
+    if (denominator === 0) {
+      return 0;
+    } else {
+      return (numerator/denominator);
+    }
+  }
   
   /**
    * return an error message as string depending on what error status is received.
@@ -183,7 +231,7 @@ class FinnhubR13s extends React.Component {
           </Modal>
 
           <Button style={{marginTop: '5px'}} variant="primary" 
-            onClick={() => this.handleRecommendationsClick()}>
+            onClick={() => this.handleRecommendationsClick(this.props.stocklist)}>
             Recommendations
           </Button>
         </>
