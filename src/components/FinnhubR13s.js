@@ -111,8 +111,10 @@ class FinnhubR13s extends React.Component {
 
     //Sorting by the highest percentage of buy recommendations
     this.state.r13s = [...r13sObj];
-    this.state.r13s.sort((b,a) => a.buyPercentNum - b.buyPercentNum);
-
+    this.state.r13s.sort((b,a) => 
+      a.buyPercentNum - b.buyPercentNum || 
+      a.strongBuy - b.strongBuy ||
+      a.hold - b.hold);
     this.setState({ isLoading: false })
   }  
 
