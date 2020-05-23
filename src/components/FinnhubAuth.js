@@ -92,7 +92,7 @@ export default class FinnhubAuthComponent extends Component {
             {this.state.saved &&
 
             <div className="row">
-                <div className="col-sm-6"><FinnhubR13s /></div>
+                <div className="col-sm-6"><FinnhubR13s stocklist="finnhub"/></div>
                 <div className="col-sm-6">
                     <p>
                         Using API Key from <a href="https://finnhub.io" target="_blank" rel="noopener noreferrer">Finnhub</a>.<br/>
