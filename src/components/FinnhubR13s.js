@@ -113,6 +113,7 @@ class FinnhubR13s extends React.Component {
     this.state.r13s = [...r13sObj];
     this.state.r13s.sort((b,a) => 
       a.buyPercentNum - b.buyPercentNum || 
+      a.buy - b.buy ||
       a.strongBuy - b.strongBuy ||
       a.hold - b.hold);
     this.setState({ isLoading: false })
