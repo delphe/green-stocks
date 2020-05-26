@@ -191,12 +191,6 @@ class App extends React.Component {
                    - PowerShares Cleantech Portfolio tracks a tiered equal-weighted index of companies in the cleantech industry selected for their outperformance potential.<br/>
                    {/* <FinnhubData symbol="PZD" /> */}
                    <br/>
-                <h3>High Environmental Score</h3>
-                <a href="https://finance.yahoo.com/u/yahoo-finance/watchlists/environmental-high/" target="_blank" rel="noopener noreferrer">
-                  Yahoo Finance </a> provides a list of stocks which have the highest Environmental scores as rated by Sustainalytics Research. 
-                  The list is generated daily and limited to the top 30 stocks.
-                  As of 05/23/2020, these stocks have been loaded into this site, where we use the Finnhub API to display recommendations.
-                  <FinnhubR13s stocklist="yahoo"/>
               </div>
             </div>
           </div>
