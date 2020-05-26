@@ -3,7 +3,6 @@ import './App.css';
 import Navigation from './components/Navigation';
 import FinnhubAuth from './components/FinnhubAuth';
 import FinnhubData from './components/FinnhubData';
-import FinnhubR13s from './components/FinnhubR13s';
 
 class App extends React.Component {  
   render() {
