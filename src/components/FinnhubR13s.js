@@ -10,12 +10,12 @@ import PropTypes from 'prop-types';
  * Note: R13s is short for Recommendations. I'm sure you can guess what R12n stands for. 
  * @component
  * @example
- * const stocklist = 'yahoo'
+ * const stocklist = 'sustainable_co'
  */
 class FinnhubR13s extends React.Component {
   static propTypes = {
     /**
-     * Which Type of Stock List to use. Example: yahoo or finnhub
+     * Which Type of Stock List to use. Example: sustainable_co or finnhub
      */
     stocklist: PropTypes.string.isRequired
   }
@@ -26,11 +26,11 @@ class FinnhubR13s extends React.Component {
       isLoading: false,
       buy: null,
       r13s: [],
-      yahoo_stocks: ['CI','KOF','NGG','LBRDA','ET','FOXA','ACGLO','YNDX','TEVA','ZG','MT','IHG','MBT','WRK','SQM','CIB','CLR','ZION','AVAL','XRX','WPX','VEON','TGNA'],
-      // Listed on Finnhub but not Robinhood: 'WFC-PY','BRK-A','NYCB-PA','KIM-PL','NLY-PF','FRC-PH','DLR-PJ'
+      sustainable_co: ['CSCO','HPE','MKC','PLD','DHR','HPQ','CMA','CHYHY','NVZMY','ING','BDORY','AQNA','UMICY','CIG','ACN','TSM','SNY','KNYJY','ISNPY','SIEGY','NABZY','SHG','BDRBF','UL','BMO','SGBLY','ERIC','CNI','CSIQ','WDAY'],
+      // eft_stocks: ['ESGU','ESGE','SUSL','ESGD','DSI','SUSA','ICLN','LDEM','CRBN','SUSB','EAGG','ESML','SUSC','SDG','BGRN'],
       finnhub_stocks: ['TSLA','NIO','FCEL','ENS','GE','FSLR','VSLR','JKS','SPWR','SEDG','RUN','ENPH','NOVA','AWK','IDA','XLY','PCG','BEP','UNFI','CVA','FTEK'],
-      //TODO: find another API that can lookup these other stocks
-      other_stocks: ['BLDP','PCRFY','VWDRY','NEP','FAN','TAN','ORA','EVX','PZD']
+      // TODO: find another API that can lookup these other stocks
+      // other_stocks: ['BLDP','PCRFY','VWDRY','NEP','FAN','TAN','ORA','EVX','PZD']
     }
   }
   /**
@@ -54,7 +54,7 @@ class FinnhubR13s extends React.Component {
     if (stocklist === 'finnhub') {
       stock_array = this.state.finnhub_stocks;
     } else {
-      stock_array = this.state.yahoo_stocks;
+      stock_array = this.state.sustainable_co;
     }
     this.resetState();
     this.setState({ show: true, isLoading: true });
@@ -74,6 +74,7 @@ class FinnhubR13s extends React.Component {
                 hold: response.data[0].hold,
                 holdPercentage: parseFloat(this.divide(response.data[0].hold, totalAnalysts)*100).toFixed(1)+"%",
                 sell: response.data[0].sell,
+                sellPercentNum: this.divide(response.data[0].sell, totalAnalysts),
                 sellPercentage: parseFloat(this.divide(response.data[0].sell, totalAnalysts)*100).toFixed(1)+"%",
                 strongBuy: response.data[0].strongBuy,
                 strongSell: response.data[0].strongSell,
@@ -89,10 +90,11 @@ class FinnhubR13s extends React.Component {
                 hold: 0,
                 holdPercentage: '0%',
                 sell: 0,
+                sellPercentNum: 0,
                 sellPercentage: '0%',
                 strongBuy: 0,
                 strongSell: 0,
-                period: 0,
+                period: "N/A - No Data",
                 error: null
               })
             }
@@ -108,14 +110,9 @@ class FinnhubR13s extends React.Component {
         console.log(e);
       }   
     }
-
-    //Sorting by the highest percentage of buy recommendations
     this.state.r13s = [...r13sObj];
-    this.state.r13s.sort((b,a) => 
-      a.buyPercentNum - b.buyPercentNum || 
-      a.buy - b.buy ||
-      a.strongBuy - b.strongBuy ||
-      a.hold - b.hold);
+    //Sorting by the highest percentage of buy recommendations
+    this.sortR13s(true);
     this.setState({ isLoading: false })
   }  
 
@@ -130,6 +127,27 @@ class FinnhubR13s extends React.Component {
     } else {
       return (numerator/denominator);
     }
+  }
+
+  /**
+   * Sort the list of recommendations by highest percentage of buy or sell recommendations.
+   * @param {*} buy - boolean value - true if sorting by buy, false if sorting by sell
+   */
+  sortR13s(buy){
+    if (buy) {
+      this.state.r13s.sort((b,a) => 
+      a.buyPercentNum - b.buyPercentNum || 
+      a.buy - b.buy ||
+      a.strongBuy - b.strongBuy ||
+      a.hold - b.hold);
+    } else {
+      this.state.r13s.sort((b,a) => 
+      a.sellPercentNum - b.sellPercentNum || 
+      a.sell - b.sell ||
+      a.strongSell - b.strongSell ||
+      b.hold - a.hold);
+    }
+    this.setState({r13s: this.state.r13s});
   }
   
   /**
@@ -193,6 +211,14 @@ class FinnhubR13s extends React.Component {
               {/* Recommendation Data */}
               {this.state.isLoading === false &&
                 <div>
+                  Sort: <Button variant="secondary" 
+                          onClick={() => this.sortR13s(true)}>
+                          Buy
+                        </Button> &nbsp;
+                        <Button variant="secondary" 
+                          onClick={() => this.sortR13s(false)}>
+                          Sell
+                        </Button>
                   {this.state.r13s.map((r12n) => (
                     <div key={this.state.r13s.symbol}>
                       <h3><a href={'https://robinhood.com/stocks/'+r12n.symbol} target="_blank" rel="noopener noreferrer">
