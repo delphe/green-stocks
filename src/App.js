@@ -3,6 +3,7 @@ import './App.css';
 import Navigation from './components/Navigation';
 import FinnhubAuth from './components/FinnhubAuth';
 import FinnhubData from './components/FinnhubData';
+import FinnhubR13s from './components/FinnhubR13s';
 
 class App extends React.Component {  
   render() {
@@ -190,6 +191,12 @@ class App extends React.Component {
                    - PowerShares Cleantech Portfolio tracks a tiered equal-weighted index of companies in the cleantech industry selected for their outperformance potential.<br/>
                    {/* <FinnhubData symbol="PZD" /> */}
                    <br/>
+                <h3>Corporate Knights Sustainable List</h3>
+                Several companies which earned a spot on Corporate Knights&apos; index of the world&apos;s most sustainable corporations that are found on Robinhood.
+                  See <a href="https://www.corporateknights.com/reports/2020-global-100/2020-global-100-ranking-15795648/" target="_blank" rel="noopener noreferrer">
+                  2020 Global 100 ranking</a> for all of them. <br/>
+                  <FinnhubR13s stocklist="sustainable_co"/> 
+                  <br/>
               </div>
             </div>
           </div>
