@@ -28,7 +28,7 @@ class FinnhubR13s extends React.Component {
       r13s: [],
       sustainable_co: ['CSCO','HPE','MKC','PLD','DHR','HPQ','CMA','CHYHY','NVZMY','ING','BDORY','AQNA','UMICY','CIG','ACN','TSM','SNY','KNYJY','ISNPY','SIEGY','NABZY','SHG','BDRBF','UL','BMO','SGBLY','ERIC','CNI','CSIQ','WDAY'],
       // eft_stocks: ['ESGU','ESGE','SUSL','ESGD','DSI','SUSA','ICLN','LDEM','CRBN','SUSB','EAGG','ESML','SUSC','SDG','BGRN'],
-      finnhub_stocks: ['TSLA','NIO','FCEL','ENS','GE','FSLR','VSLR','JKS','SPWR','SEDG','RUN','ENPH','NOVA','AWK','IDA','XLY','PCG','BEP','UNFI','CVA','FTEK'],
+      finnhub_stocks: ['TSLA','NIO','NKLA','FCEL','ENS','GE','FSLR','VSLR','JKS','SPWR','SEDG','RUN','ENPH','NOVA','AWK','IDA','XLY','PCG','BEP','UNFI','CVA','FTEK'],
       // TODO: find another API that can lookup these other stocks
       // other_stocks: ['BLDP','PCRFY','VWDRY','NEP','FAN','TAN','ORA','EVX','PZD']
     }
@@ -62,7 +62,8 @@ class FinnhubR13s extends React.Component {
     var r13sObj = [];
     for (const [,symbol] of stock_array.entries()) {
       try {
-        await axios.get('https://finnhub.io/api/v1/stock/recommendation?symbol='+symbol+'&token='+keyData.apikey)
+        await axios.get('https://finnhub.io/api/v1/stock/recommendation?symbol='+
+          symbol+'&token='+keyData.apikey, { timeout: 30000 })
           .then( (response) => {
             if (response.data.length>0) {
               var totalAnalysts = response.data[0].buy + response.data[0].sell + response.data[0].hold;
@@ -159,6 +160,9 @@ class FinnhubR13s extends React.Component {
    * @param  {} error api error response from Finnhub
    */
   finnhubErrorHandler(error){
+    if(error.response === undefined){
+      return 'An error occurred calling Finnhub API!';
+    }
     switch (error.response.status) {
       case 401 :
         return 'Authentication Failed! Try deleting your API Key and re-enter it.';

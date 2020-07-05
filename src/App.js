@@ -37,6 +37,11 @@ class App extends React.Component {
                      - A holding company, which engages in the design, manufacture, and sale of electric vehicles.<br/>
                   <FinnhubData symbol="NIO" />
                   <br/>
+                  <a href="https://robinhood.com/stocks/NKLA" target="_blank" rel="noopener noreferrer">
+                  NKLA </a>
+                     - Nikola Corp. engages in the provision of zero-emissions transportation and infrastructure solutions. It designs and manufactures battery-electric and hydrogen-electric vehicles, electric vehicle drivetrains, vehicle components, energy storage systems, and hydrogen fueling station infrastructure.<br/>
+                  <FinnhubData symbol="NKLA" />
+                  <br/>
                   <a href="https://robinhood.com/stocks/BLDP" target="_blank" rel="noopener noreferrer">
                   BLDP </a>
                    - Ballard Power Systems, Inc. engages in the design, development, manufacture, sale, and service of fuel cell products for a variety of applications.<br/>
