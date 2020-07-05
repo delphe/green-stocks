@@ -73,7 +73,8 @@ class FinnhubData extends React.Component {
     this.keyData = JSON.parse(localStorage.getItem('apikey'));
     this.setState({ show: true, isLoading: true });
     try {
-      await axios.get('https://finnhub.io/api/v1/stock/profile?symbol='+symbol+'&token='+this.keyData.apikey)
+      await axios.get('https://finnhub.io/api/v1/stock/profile?symbol='+symbol+
+       '&token='+this.keyData.apikey, { timeout: 30000 })
         .then( (response) => {
           this.setState({
             name: response.data.name,
@@ -101,7 +102,8 @@ class FinnhubData extends React.Component {
     this.keyData = JSON.parse(localStorage.getItem('apikey'));
     this.setState({ show: true, isLoading: true });
     try {
-      await axios.get('https://finnhub.io/api/v1/quote?symbol='+symbol+'&token='+this.keyData.apikey)
+      await axios.get('https://finnhub.io/api/v1/quote?symbol='+symbol+
+       '&token='+this.keyData.apikey, { timeout: 30000 })
         .then( (response) => {
           var date = new Date(response.data.t * 1000);
           var months_arr = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -119,6 +121,7 @@ class FinnhubData extends React.Component {
             isLoading: false
           })
         }, (error) => {
+          console.log("ERROR!!!");
           this.finnhubErrorHandler(error);
         } )
     } catch (e) {
@@ -136,7 +139,8 @@ class FinnhubData extends React.Component {
     this.keyData = JSON.parse(localStorage.getItem('apikey'));
     this.setState({ show: true, isLoading: true });
     try {
-      await axios.get('https://finnhub.io/api/v1/stock/price-target?symbol='+symbol+'&token='+this.keyData.apikey)
+      await axios.get('https://finnhub.io/api/v1/stock/price-target?symbol='+symbol+
+       '&token='+this.keyData.apikey, { timeout: 30000 })
         .then( (response) => {
           this.setState({
             lastUpdated: response.data.lastUpdated,
@@ -165,7 +169,8 @@ class FinnhubData extends React.Component {
     this.keyData = JSON.parse(localStorage.getItem('apikey'));
     this.setState({ show: true, isLoading: true });
     try {
-      await axios.get('https://finnhub.io/api/v1/stock/peers?symbol='+symbol+'&token='+this.keyData.apikey)
+      await axios.get('https://finnhub.io/api/v1/stock/peers?symbol='+symbol+
+       '&token='+this.keyData.apikey, { timeout: 30000 })
         .then( (response) => {
           this.setState({
             peers: response.data,
@@ -189,7 +194,8 @@ class FinnhubData extends React.Component {
     this.keyData = JSON.parse(localStorage.getItem('apikey'));
     this.setState({ show: true, isLoading: true });
     try {
-      await axios.get('https://finnhub.io/api/v1/stock/recommendation?symbol='+symbol+'&token='+this.keyData.apikey)
+      await axios.get('https://finnhub.io/api/v1/stock/recommendation?symbol='+symbol+
+       '&token='+this.keyData.apikey, { timeout: 30000 })
         .then( (response) => {
           var totalAnalysts = response.data[0].buy + response.data[0].sell + response.data[0].hold;
           this.setState({
@@ -223,9 +229,17 @@ class FinnhubData extends React.Component {
   finnhubErrorHandler(error){
     this.keyData = JSON.parse(localStorage.getItem('apikey'));
     var error_msg;
-    var missing_apikey_msg;
+    var missing_apikey_msg = '';
     if(!this.keyData.apikey || this.keyData.apikey === ''){
       missing_apikey_msg = 'Please obtain an API Key from Finnhub.';
+    }
+    if(error.response === undefined){
+      console.log("Error status not found!!! Most likely a timeout issue.");
+      this.resetState();
+      this.setState({ 
+        error: ' An error occurred calling Finnhub API! ' + missing_apikey_msg
+      });
+      return;
     }
     switch (error.response.status) {
       case 401 :
