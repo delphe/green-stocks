@@ -88,6 +88,10 @@ class FinnhubData extends React.Component {
           this.finnhubErrorHandler(error);
         } )
     } catch (e) {
+      this.resetState();
+      this.setState({ 
+        error: 'An error occurred calling Finnhub API!'
+      });
       console.log(e);
     }   
   }
@@ -125,6 +129,10 @@ class FinnhubData extends React.Component {
           this.finnhubErrorHandler(error);
         } )
     } catch (e) {
+      this.resetState();
+      this.setState({ 
+        error: 'An error occurred calling Finnhub API!'
+      });
       console.log(e);
     }   
   }
@@ -155,6 +163,10 @@ class FinnhubData extends React.Component {
           this.finnhubErrorHandler(error);
         } )
     } catch (e) {
+      this.resetState();
+      this.setState({ 
+        error: 'An error occurred calling Finnhub API!'
+      });
       console.log(e);
     }   
   }
@@ -172,6 +184,9 @@ class FinnhubData extends React.Component {
       await axios.get('https://finnhub.io/api/v1/stock/peers?symbol='+symbol+
        '&token='+this.keyData.apikey, { timeout: 30000 })
         .then( (response) => {
+          if (response.data.length === 0){
+            this.resetState();
+          }
           this.setState({
             peers: response.data,
             symbol: symbol,
@@ -180,6 +195,10 @@ class FinnhubData extends React.Component {
           this.finnhubErrorHandler(error);
         } )
     } catch (e) {
+      this.resetState();
+      this.setState({ 
+        error: 'An error occurred calling Finnhub API!'
+      });
       console.log(e);
     }   
   }
@@ -197,6 +216,10 @@ class FinnhubData extends React.Component {
       await axios.get('https://finnhub.io/api/v1/stock/recommendation?symbol='+symbol+
        '&token='+this.keyData.apikey, { timeout: 30000 })
         .then( (response) => {
+          if (response.data.length === 0){
+            this.resetState();
+            return;
+          }
           var totalAnalysts = response.data[0].buy + response.data[0].sell + response.data[0].hold;
           this.setState({
             buy: response.data[0].buy,
@@ -214,6 +237,10 @@ class FinnhubData extends React.Component {
           this.finnhubErrorHandler(error);
         } )
     } catch (e) {
+      this.resetState();
+      this.setState({ 
+        error: 'An error occurred calling Finnhub API!'
+      });
       console.log(e);
     }   
   }

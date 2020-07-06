@@ -42,6 +42,11 @@ class App extends React.Component {
                      - Nikola Corp. engages in the provision of zero-emissions transportation and infrastructure solutions. It designs and manufactures battery-electric and hydrogen-electric vehicles, electric vehicle drivetrains, vehicle components, energy storage systems, and hydrogen fueling station infrastructure.<br/>
                   <FinnhubData symbol="NKLA" />
                   <br/>
+                  <a href="https://robinhood.com/stocks/SOLO" target="_blank" rel="noopener noreferrer">
+                  SOLO </a>
+                     - Electrameccanica Vehicles Corp. engages in development and manufacture of electric vehicles. It operates through Electric Vehicles and Custom Build Vehicles segments.<br/>
+                  <FinnhubData symbol="SOLO" />
+                  <br/>
                   <a href="https://robinhood.com/stocks/BLDP" target="_blank" rel="noopener noreferrer">
                   BLDP </a>
                    - Ballard Power Systems, Inc. engages in the design, development, manufacture, sale, and service of fuel cell products for a variety of applications.<br/>
@@ -196,6 +201,17 @@ class App extends React.Component {
                    - PowerShares Cleantech Portfolio tracks a tiered equal-weighted index of companies in the cleantech industry selected for their outperformance potential.<br/>
                    {/* <FinnhubData symbol="PZD" /> */}
                    <br/>
+                <h3>Other</h3>
+                  <a href="https://robinhood.com/stocks/EFOI" target="_blank" rel="noopener noreferrer">
+                  EFOI </a>
+                  - Energy Focus, Inc. engages in the design, development, and manufacture of energy-efficient lighting systems. <br/>
+                  <FinnhubData symbol="EFOI" />
+                  <br/>
+                  <a href="https://robinhood.com/stocks/AY" target="_blank" rel="noopener noreferrer">
+                  AY </a>
+                  - Atlantica Sustainable Infrastructure Plc engages in the ownership, management, and acquisition of renewable energy. It specializes in the following businesses: Renewable Energy; Natural Gas; Electrical Transmission; and Water.  <br/>
+                  <FinnhubData symbol="AY" />
+                  <br/>
                 <h3>Corporate Knights Sustainable List</h3>
                 Several companies which earned a spot on Corporate Knights&apos; index of the world&apos;s most sustainable corporations that are found on Robinhood.
                   See <a href="https://www.corporateknights.com/reports/2020-global-100/2020-global-100-ranking-15795648/" target="_blank" rel="noopener noreferrer">
