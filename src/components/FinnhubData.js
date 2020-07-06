@@ -184,6 +184,9 @@ class FinnhubData extends React.Component {
       await axios.get('https://finnhub.io/api/v1/stock/peers?symbol='+symbol+
        '&token='+this.keyData.apikey, { timeout: 30000 })
         .then( (response) => {
+          if (response.data.length === 0){
+            this.resetState();
+          }
           this.setState({
             peers: response.data,
             symbol: symbol,
