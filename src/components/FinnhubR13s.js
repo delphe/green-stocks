@@ -26,9 +26,13 @@ class FinnhubR13s extends React.Component {
       isLoading: false,
       buy: null,
       r13s: [],
-      sustainable_co: ['CSCO','HPE','MKC','PLD','DHR','HPQ','CMA','CHYHY','NVZMY','ING','BDORY','AQNA','UMICY','CIG','ACN','TSM','SNY','KNYJY','ISNPY','SIEGY','NABZY','SHG','BDRBF','UL','BMO','SGBLY','ERIC','CNI','CSIQ','WDAY'],
+      sustainable_co: ['CSCO','HPE','MKC','PLD','DHR','HPQ','CMA','CHYHY','NVZMY',
+        'ING','BDORY','AQNA','UMICY','CIG','ACN','TSM','SNY','KNYJY','ISNPY','SIEGY',
+        'NABZY','SHG','BDRBF','UL','BMO','SGBLY','ERIC','CNI','CSIQ','WDAY'],
       // eft_stocks: ['ESGU','ESGE','SUSL','ESGD','DSI','SUSA','ICLN','LDEM','CRBN','SUSB','EAGG','ESML','SUSC','SDG','BGRN'],
-      finnhub_stocks: ['TSLA','NIO','NKLA','FCEL','ENS','GE','FSLR','VSLR','JKS','SPWR','SEDG','RUN','ENPH','NOVA','AWK','IDA','XLY','PCG','BEP','UNFI','CVA','FTEK'],
+      finnhub_stocks: ['TSLA','NIO','NKLA','FCEL','ENS','GE','FSLR','VSLR','JKS',
+        'SPWR','SEDG','RUN','ENPH','NOVA','AWK','IDA','XLY','PCG','BEP','UNFI','CVA',
+        'FTEK','EFOI','SOLO','AY'],
       // TODO: find another API that can lookup these other stocks
       // other_stocks: ['BLDP','PCRFY','VWDRY','NEP','FAN','TAN','ORA','EVX','PZD']
     }
