@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { Modal, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import {getRecommendation, finnhubErrorHandler} from './FinnhubUtil.js';
 
 /**
  * Displays available buttons for a stock.
@@ -19,7 +20,7 @@ class FinnhubData extends React.Component {
     symbol: PropTypes.string.isRequired
   }
   constructor () {
-    super()
+    super();
     this.handleDetailsClick = this.handleDetailsClick.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.state = {
@@ -32,7 +33,7 @@ class FinnhubData extends React.Component {
       peers: [],
       buy: null,
       error:''
-    }
+    };
   }
   /**
    * reset all data saved to state back to default values 
@@ -60,7 +61,7 @@ class FinnhubData extends React.Component {
       buy: null,
       peers: [],
       error:''
-    })
+    });
   }
 
   /**
@@ -83,10 +84,10 @@ class FinnhubData extends React.Component {
             weburl: response.data.weburl,
             symbol: response.data.ticker,
             isLoading: false
-          })
+          });
         }, (error) => {
-          this.finnhubErrorHandler(error);
-        } )
+          this.errorHandler(error);
+        });
     } catch (e) {
       this.resetState();
       this.setState({ 
@@ -113,7 +114,7 @@ class FinnhubData extends React.Component {
           var months_arr = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
           var month = months_arr[date.getMonth()];
           var formatted_date = month+'/'+date.getDate()+'/'+date.getFullYear()+' '+
-            date.getHours()+":"+date.getMinutes()+':'+date.getSeconds()
+            date.getHours()+":"+date.getMinutes()+':'+date.getSeconds();
           this.setState({
             current_price: response.data.c,
             high_price: response.data.h,
@@ -123,11 +124,11 @@ class FinnhubData extends React.Component {
             time_stamp: formatted_date.toString(),
             symbol: symbol,
             isLoading: false
-          })
+          });
         }, (error) => {
           console.log("ERROR!!!");
-          this.finnhubErrorHandler(error);
-        } )
+          this.errorHandler(error);
+        });
     } catch (e) {
       this.resetState();
       this.setState({ 
@@ -158,10 +159,10 @@ class FinnhubData extends React.Component {
             targetMean: response.data.targetMean,
             targetMedian: response.data.targetMedian,
             isLoading: false
-          })
+          });
         }, (error) => {
-          this.finnhubErrorHandler(error);
-        } )
+          this.errorHandler(error);
+        });
     } catch (e) {
       this.resetState();
       this.setState({ 
@@ -190,10 +191,10 @@ class FinnhubData extends React.Component {
           this.setState({
             peers: response.data,
             symbol: symbol,
-            isLoading: false})
+            isLoading: false});
         }, (error) => {
-          this.finnhubErrorHandler(error);
-        } )
+          this.errorHandler(error);
+        });
     } catch (e) {
       this.resetState();
       this.setState({ 
@@ -212,82 +213,28 @@ class FinnhubData extends React.Component {
     this.resetState();
     this.keyData = JSON.parse(localStorage.getItem('apikey'));
     this.setState({ show: true, isLoading: true });
-    try {
-      await axios.get('https://finnhub.io/api/v1/stock/recommendation?symbol='+symbol+
-       '&token='+this.keyData.apikey, { timeout: 30000 })
-        .then( (response) => {
-          if (response.data.length === 0){
-            this.resetState();
-            return;
-          }
-          var totalAnalysts = response.data[0].buy + response.data[0].sell + response.data[0].hold;
-          this.setState({
-            buy: response.data[0].buy,
-            buyPercentage: parseFloat(response.data[0].buy/totalAnalysts*100).toFixed(1)+"%",
-            hold: response.data[0].hold,
-            holdPercentage: parseFloat(response.data[0].hold/totalAnalysts*100).toFixed(1)+"%",
-            sell: response.data[0].sell,
-            sellPercentage: parseFloat(response.data[0].sell/totalAnalysts*100).toFixed(1)+"%",
-            strongBuy: response.data[0].strongBuy,
-            strongSell: response.data[0].strongSell,
-            period: response.data[0].period,
-            symbol: symbol,
-            isLoading: false})
-        }, (error) => {
-          this.finnhubErrorHandler(error);
-        } )
-    } catch (e) {
+    var r13sObj = await getRecommendation(symbol, this.keyData.apikey);
+    if (r13sObj.error === null){
+      this.setState(r13sObj);
+      this.setState({
+        symbol: symbol,
+        isLoading: false});
+    } else {
       this.resetState();
       this.setState({ 
-        error: 'An error occurred calling Finnhub API!'
+        error: r13sObj.error
       });
-      console.log(e);
-    }   
+    }
   }
   
   /**
-   * set error state as an error message depending on what error status is received.
-   * @example
-   * 401 - Authentication failure
-   * 429 - Rate Limit Exceeded
-   * default - 'Other status codes return a default error message'
-   * @param  {} error api error response from Finnhub
+   * set error state of an error message depending on what error status is received.
    */
-  finnhubErrorHandler(error){
+  errorHandler(error){
     this.keyData = JSON.parse(localStorage.getItem('apikey'));
-    var error_msg;
-    var missing_apikey_msg = '';
-    if(!this.keyData.apikey || this.keyData.apikey === ''){
-      missing_apikey_msg = 'Please obtain an API Key from Finnhub.';
-    }
-    if(error.response === undefined){
-      console.log("Error status not found!!! Most likely a timeout issue.");
-      this.resetState();
-      this.setState({ 
-        error: ' An error occurred calling Finnhub API! ' + missing_apikey_msg
-      });
-      return;
-    }
-    switch (error.response.status) {
-      case 401 :
-        console.log("Authentication Failed!!!");
-        error_msg = ' Finnhub is not accepting your key. Please delete your API Key and re-enter it. '
-           + missing_apikey_msg;
-        break
-      case 429 :
-        console.log("RateLimitExceeded!!!");
-        error_msg = ' Finnhub API call limit has exceeded! '
-           + missing_apikey_msg;
-        break
-      default :
-        console.log("Finhub API Error!!!");
-        error_msg = ' An error occurred calling Finnhub API! ' 
-           + missing_apikey_msg;
-        break
-    }
     this.resetState();
     this.setState({ 
-      error: error_msg
+      error: finnhubErrorHandler(error, this.keyData.apikey)
     });
   }
 
