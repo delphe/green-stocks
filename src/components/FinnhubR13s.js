@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import {getRecommendation} from './FinnhubUtil.js'
+import {getRecommendation} from './FinnhubUtil.js';
 
 /**
  * Displays Recommendations button.

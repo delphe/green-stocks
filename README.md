@@ -5,7 +5,7 @@ A place to get advice on which stocks are green; Companies that are known for su
 
 This app has been deployed to GitHub Pages: [https://delphe.github.io/green-stocks/](https://delphe.github.io/green-stocks/)
 
-## It's React!
+## It's React
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -64,20 +64,20 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/co
 
 ### Analyzing the Bundle Size
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+This section has moved (here)[https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size]
 
 ### Making a Progressive Web App
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+This section has moved (here)[https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app]
 
 ### Advanced Configuration
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+This section has moved (here)[https://facebook.github.io/create-react-app/docs/advanced-configuration]
 
 ### Deployment
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+This section has moved (here)[https://facebook.github.io/create-react-app/docs/deployment]
 
 ### `npm run build` fails to minify
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+This section has moved (here)[https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify]

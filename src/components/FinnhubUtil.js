@@ -94,12 +94,11 @@ export function finnhubErrorHandler(error, apikey){
     switch (error.response.status) {
       case 401 :
         console.log("Authentication Failed!!!");
-        error_msg = ' Finnhub is not accepting the API key. Please obtain a new one. '
+        error_msg = 'Finnhub is not accepting the API key. Please obtain a new one.';
         break;
       case 429 :
         console.log("RateLimitExceeded!!!");
-        error_msg = ' Finnhub API call limit has exceeded! '+
-          missing_apikey_msg;
+        error_msg = 'Finnhub API call limit has exceeded! '+ missing_apikey_msg;
         break;
       default :
         console.log("Finhub API Error!!!");
