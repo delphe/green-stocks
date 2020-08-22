@@ -1,7 +1,7 @@
 import React from 'react';
-import axios from 'axios';
 import { Modal, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import {getRecommendation} from './FinnhubUtil.js'
 
 /**
  * Displays Recommendations button.
@@ -63,76 +63,27 @@ class FinnhubR13s extends React.Component {
     this.resetState();
     this.setState({ show: true, isLoading: true });
     var keyData = JSON.parse(localStorage.getItem('apikey'));
-    var r13sObj = [];
+    var r13sArray = [];
     for (const [,symbol] of stock_array.entries()) {
-      try {
-        await axios.get('https://finnhub.io/api/v1/stock/recommendation?symbol='+
-          symbol+'&token='+keyData.apikey, { timeout: 30000 })
-          .then( (response) => {
-            if (response.data.length>0) {
-              var totalAnalysts = response.data[0].buy + response.data[0].sell + response.data[0].hold;
-              r13sObj.push({
-                symbol: symbol,
-                buy: response.data[0].buy,
-                buyPercentNum: this.divide(response.data[0].buy, totalAnalysts),
-                buyPercentage: parseFloat(this.divide(response.data[0].buy, totalAnalysts)*100).toFixed(1)+"%",
-                hold: response.data[0].hold,
-                holdPercentage: parseFloat(this.divide(response.data[0].hold, totalAnalysts)*100).toFixed(1)+"%",
-                sell: response.data[0].sell,
-                sellPercentNum: this.divide(response.data[0].sell, totalAnalysts),
-                sellPercentage: parseFloat(this.divide(response.data[0].sell, totalAnalysts)*100).toFixed(1)+"%",
-                strongBuy: response.data[0].strongBuy,
-                strongSell: response.data[0].strongSell,
-                period: response.data[0].period,
-                error: null
-              });
-            } else {
-              r13sObj.push({
-                symbol: symbol,
-                buy: 0,
-                buyPercentNum: 0,
-                buyPercentage: '0%',
-                hold: 0,
-                holdPercentage: '0%',
-                sell: 0,
-                sellPercentNum: 0,
-                sellPercentage: '0%',
-                strongBuy: 0,
-                strongSell: 0,
-                period: "N/A - No Data",
-                error: null
-              });
-            }
-            
-          }, (error) => {
-            r13sObj.push({
-              symbol: symbol,
-              buyPercentNum: 0,
-              error: this.finnhubErrorHandler(error)
-            });
-          });
-      } catch (e) {
-        console.log(e);
-      }   
+      var r13sObj = await getRecommendation(symbol, keyData.apikey);
+      if (r13sObj.error === null){
+        r13sArray.push(r13sObj);
+        this.setState({
+          symbol: symbol,
+          isLoading: false});
+      } else {
+        r13sArray.push({
+          symbol: symbol,
+          buyPercentNum: 0,
+          error: r13sObj.error
+        });
+      }
     }
-    this.state.r13s = [...r13sObj];
+    this.state.r13s = [...r13sArray];
     //Sorting by the highest percentage of buy recommendations
     this.sortR13s(true);
     this.setState({ isLoading: false });
   }  
-
-  /**
-   * If the denominator is 0, just return 0
-   * @param {*} numerator should be a valid number
-   * @param {*} denominator should be a valid number
-   */
-  divide(numerator, denominator){
-    if (denominator === 0) {
-      return 0;
-    } else {
-      return (numerator/denominator);
-    }
-  }
 
   /**
    * Sort the list of recommendations by highest percentage of buy or sell recommendations.
@@ -153,28 +104,6 @@ class FinnhubR13s extends React.Component {
       b.hold - a.hold);
     }
     this.setState({r13s: this.state.r13s});
-  }
-  
-  /**
-   * return an error message as string depending on what error status is received.
-   * @example
-   * 401 - Authentication failure
-   * 429 - Rate Limit Exceeded
-   * default - 'Other status codes return a default error message'
-   * @param  {} error api error response from Finnhub
-   */
-  finnhubErrorHandler(error){
-    if(error.response === undefined){
-      return 'An error occurred calling Finnhub API!';
-    }
-    switch (error.response.status) {
-      case 401 :
-        return 'Authentication Failed! Try deleting your API Key and re-enter it.';
-      case 429 :
-        return 'Finnhub API call limit has exceeded!';
-      default :
-        return 'An error occurred calling Finnhub API!';
-    }
   }
 
   /**
