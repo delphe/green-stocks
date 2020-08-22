@@ -16,7 +16,7 @@ export default class FinnhubAuthComponent extends Component {
         this.state = {
             apikey: '',
             saved: false
-        }
+        };
     }
 
     /**
@@ -37,7 +37,7 @@ export default class FinnhubAuthComponent extends Component {
      * @param  {} e event of Use Key button 
      */
     onSubmit(e) {
-        e.preventDefault()
+        e.preventDefault();
         if(this.state.apikey && this.state.apikey !== ''){
             this.setState({saved: true});
         }else{
@@ -55,12 +55,12 @@ export default class FinnhubAuthComponent extends Component {
             this.setState({
                 apikey: this.keyData.apikey,
                 saved: true
-            })
+            });
         } else {
             this.setState({
                 apikey: '',
                 saved: false
-            })
+            });
         }
     }
 

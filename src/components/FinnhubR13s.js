@@ -20,7 +20,7 @@ class FinnhubR13s extends React.Component {
     stocklist: PropTypes.string.isRequired
   }
   constructor () {
-    super()
+    super();
     this.handleClose = this.handleClose.bind(this);
     this.state = {
       isLoading: false,
@@ -29,13 +29,13 @@ class FinnhubR13s extends React.Component {
       sustainable_co: ['CSCO','HPE','MKC','PLD','DHR','HPQ','CMA','CHYHY','NVZMY',
         'ING','BDORY','AQNA','UMICY','CIG','ACN','TSM','SNY','KNYJY','ISNPY','SIEGY',
         'NABZY','SHG','BDRBF','UL','BMO','SGBLY','ERIC','CNI','CSIQ','WDAY'],
-      // eft_stocks: ['ESGU','ESGE','SUSL','ESGD','DSI','SUSA','ICLN','LDEM','CRBN','SUSB','EAGG','ESML','SUSC','SDG','BGRN'],
       finnhub_stocks: ['TSLA','NIO','NKLA','FCEL','ENS','GE','FSLR','VSLR','JKS',
         'SPWR','SEDG','RUN','ENPH','NOVA','AWK','IDA','XLY','PCG','BEP','UNFI','CVA',
         'FTEK','EFOI','SOLO','AY'],
       // TODO: find another API that can lookup these other stocks
       // other_stocks: ['BLDP','PCRFY','VWDRY','NEP','FAN','TAN','ORA','EVX','PZD']
-    }
+      // eft_stocks: ['ESGU','ESGE','SUSL','ESGD','DSI','SUSA','ICLN','LDEM','CRBN','SUSB','EAGG','ESML','SUSC','SDG','BGRN']
+    };
   }
   /**
    * reset all data saved to state back to default values 
@@ -46,7 +46,7 @@ class FinnhubR13s extends React.Component {
       isLoading: false,
       buy: null,
       r13s: [],
-    })
+    });
   }
 
   /**
@@ -85,7 +85,7 @@ class FinnhubR13s extends React.Component {
                 strongSell: response.data[0].strongSell,
                 period: response.data[0].period,
                 error: null
-              })
+              });
             } else {
               r13sObj.push({
                 symbol: symbol,
@@ -101,7 +101,7 @@ class FinnhubR13s extends React.Component {
                 strongSell: 0,
                 period: "N/A - No Data",
                 error: null
-              })
+              });
             }
             
           }, (error) => {
@@ -109,8 +109,8 @@ class FinnhubR13s extends React.Component {
               symbol: symbol,
               buyPercentNum: 0,
               error: this.finnhubErrorHandler(error)
-            })
-          } )
+            });
+          });
       } catch (e) {
         console.log(e);
       }   
@@ -118,7 +118,7 @@ class FinnhubR13s extends React.Component {
     this.state.r13s = [...r13sObj];
     //Sorting by the highest percentage of buy recommendations
     this.sortR13s(true);
-    this.setState({ isLoading: false })
+    this.setState({ isLoading: false });
   }  
 
   /**

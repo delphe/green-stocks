@@ -19,7 +19,7 @@ class FinnhubData extends React.Component {
     symbol: PropTypes.string.isRequired
   }
   constructor () {
-    super()
+    super();
     this.handleDetailsClick = this.handleDetailsClick.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.state = {
@@ -32,7 +32,7 @@ class FinnhubData extends React.Component {
       peers: [],
       buy: null,
       error:''
-    }
+    };
   }
   /**
    * reset all data saved to state back to default values 
@@ -60,7 +60,7 @@ class FinnhubData extends React.Component {
       buy: null,
       peers: [],
       error:''
-    })
+    });
   }
 
   /**
@@ -83,10 +83,10 @@ class FinnhubData extends React.Component {
             weburl: response.data.weburl,
             symbol: response.data.ticker,
             isLoading: false
-          })
+          });
         }, (error) => {
           this.finnhubErrorHandler(error);
-        } )
+        });
     } catch (e) {
       this.resetState();
       this.setState({ 
@@ -113,7 +113,7 @@ class FinnhubData extends React.Component {
           var months_arr = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
           var month = months_arr[date.getMonth()];
           var formatted_date = month+'/'+date.getDate()+'/'+date.getFullYear()+' '+
-            date.getHours()+":"+date.getMinutes()+':'+date.getSeconds()
+            date.getHours()+":"+date.getMinutes()+':'+date.getSeconds();
           this.setState({
             current_price: response.data.c,
             high_price: response.data.h,
@@ -123,11 +123,11 @@ class FinnhubData extends React.Component {
             time_stamp: formatted_date.toString(),
             symbol: symbol,
             isLoading: false
-          })
+          });
         }, (error) => {
           console.log("ERROR!!!");
           this.finnhubErrorHandler(error);
-        } )
+        });
     } catch (e) {
       this.resetState();
       this.setState({ 
@@ -158,10 +158,10 @@ class FinnhubData extends React.Component {
             targetMean: response.data.targetMean,
             targetMedian: response.data.targetMedian,
             isLoading: false
-          })
+          });
         }, (error) => {
           this.finnhubErrorHandler(error);
-        } )
+        });
     } catch (e) {
       this.resetState();
       this.setState({ 
@@ -190,10 +190,10 @@ class FinnhubData extends React.Component {
           this.setState({
             peers: response.data,
             symbol: symbol,
-            isLoading: false})
+            isLoading: false});
         }, (error) => {
           this.finnhubErrorHandler(error);
-        } )
+        });
     } catch (e) {
       this.resetState();
       this.setState({ 
@@ -232,10 +232,10 @@ class FinnhubData extends React.Component {
             strongSell: response.data[0].strongSell,
             period: response.data[0].period,
             symbol: symbol,
-            isLoading: false})
+            isLoading: false});
         }, (error) => {
           this.finnhubErrorHandler(error);
-        } )
+        });
     } catch (e) {
       this.resetState();
       this.setState({ 
@@ -271,19 +271,19 @@ class FinnhubData extends React.Component {
     switch (error.response.status) {
       case 401 :
         console.log("Authentication Failed!!!");
-        error_msg = ' Finnhub is not accepting your key. Please delete your API Key and re-enter it. '
-           + missing_apikey_msg;
-        break
+        error_msg = ' Finnhub is not accepting your key. Please delete your API Key and re-enter it. '+
+          missing_apikey_msg;
+        break;
       case 429 :
         console.log("RateLimitExceeded!!!");
-        error_msg = ' Finnhub API call limit has exceeded! '
-           + missing_apikey_msg;
-        break
+        error_msg = ' Finnhub API call limit has exceeded! '+
+          missing_apikey_msg;
+        break;
       default :
         console.log("Finhub API Error!!!");
-        error_msg = ' An error occurred calling Finnhub API! ' 
-           + missing_apikey_msg;
-        break
+        error_msg = ' An error occurred calling Finnhub API! '+
+          missing_apikey_msg;
+        break;
     }
     this.resetState();
     this.setState({ 

@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import Navigation from './components/Navigation';
-import FinnhubAuth from './components/FinnhubAuth';
+import FinnhubAuthComponent from './components/FinnhubAuthComponent';
 import FinnhubData from './components/FinnhubData';
 import FinnhubR13s from './components/FinnhubR13s';
 
@@ -21,7 +21,7 @@ class App extends React.Component {
         <div className="App-body">
           <div className="container">
 
-            <FinnhubAuth />            
+            <FinnhubAuthComponent />            
             <div className="row">
               <div className="col-sm col-md-10 col-lg-8">
                 <h3>Energy Efficient Transportation</h3>
