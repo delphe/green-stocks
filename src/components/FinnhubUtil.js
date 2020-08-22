@@ -11,9 +11,9 @@ let missing_apikey_msg = '';
 export const getRecommendation = async (symbol, apikey) => {
     let r13sObj = {};
     try {
-        await axios.get(`https://finnhub.io/api/v1/stock/recommendation?symbol=${symbol}&token=${apikey}`, 
-        { timeout: 30000 })
-        .then( (response) => {
+        await axios.get(`https://finnhub.io/api/v1/stock/recommendation?symbol=
+          ${symbol}&token=${apikey}`, { timeout: 30000 })
+          .then( (response) => {
             if (response.data && !response.data.isArray && typeof response.data !== 'object' &&
               response.data !== "" &&  response.data !== null) {
                 if(!apikey || apikey === ''){
@@ -59,11 +59,11 @@ export const getRecommendation = async (symbol, apikey) => {
                     error: null
                 };
             }
-        }, (error) => {
+          }, (error) => {
             r13sObj = {
                 error: finnhubErrorHandler(error, apikey)
             };
-        });
+          });
     } catch (e) {
         r13sObj = {
             error: defaultError
