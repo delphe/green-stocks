@@ -213,9 +213,9 @@ class App extends React.Component {
                   <FinnhubData symbol="AY" />
                   <br/>
                 <h3>Corporate Knights Sustainable List</h3>
-                Several companies which earned a spot on Corporate Knights&apos; index of the world&apos;s most sustainable corporations that are found on Robinhood.
+                Several companies earned a spot on Corporate Knights&apos; index of the world&apos;s most sustainable corporations. Many are also found on Robinhood.
                   See <a href="https://www.corporateknights.com/reports/2020-global-100/2020-global-100-ranking-15795648/" target="_blank" rel="noopener noreferrer">
-                  2020 Global 100 ranking</a> for all of them. <br/>
+                  2020 Global 100 ranking</a> for all of them. Use the recommendations button below to see the ones we recommend taking a look at.<br/>
                   <FinnhubR13s stocklist="sustainable_co"/> 
                   <br/>
               </div>
