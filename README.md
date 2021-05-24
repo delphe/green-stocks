@@ -3,7 +3,7 @@ A place to get advice on which stocks are green; Companies that are known for su
 
 ## Launch App
 
-This app has been deployed to GitHub Pages: [https://delphe.github.io/green-stocks/](https://delphe.github.io/green-stocks/)
+This app has been deployed to GitHub Pages: <https://delphe.github.io/green-stocks/>
 
 ## It's React
 
@@ -77,6 +77,8 @@ This section has moved [here](https://facebook.github.io/create-react-app/docs/a
 ### Deployment
 
 Terraform was used to create an S3 bucket on AWS, where this app can be deployed to using GitHub Actions. Push/merge code to "aws" repo to initiate the deployment.
+
+After deployment, launch <http://green-stocks.s3-us-west-1.amazonaws.com/index.html>
 
 **Note:** The S3 bucket may be deleted soon. Use the terraform CLI to apply the tf files in the iac folder to recreate it.
 
