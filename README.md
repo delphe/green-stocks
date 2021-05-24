@@ -76,7 +76,13 @@ This section has moved [here](https://facebook.github.io/create-react-app/docs/a
 
 ### Deployment
 
-This section has moved [here](https://facebook.github.io/create-react-app/docs/deployment)
+Terraform was used to create an S3 bucket on AWS, where this app can be deployed to using GitHub Actions. Push/merge code to "aws" repo to initiate the deployment.
+
+**Note:** The S3 bucket may be deleted soon. Use the terraform CLI to apply the tf files in the iac folder to recreate it.
+
+Borrowed code from [aej](https://github.com/aej/react-aws-terraform-github-actions) & used his [article](https://andyjones.co/articles/react-aws-terraform-github-actions/) but stripped out Cloudfront code to make it simpler.
+
+Check out more info on [FB Deployment Docs](https://facebook.github.io/create-react-app/docs/deployment)
 
 ### `npm run build` fails to minify
 
