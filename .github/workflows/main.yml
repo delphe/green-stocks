@@ -1,17 +1,13 @@
 name: Deploy to AWS
 on:
-  # Trigger the workflow on push & pull request but only for the aws branch
+  # Trigger the workflow on push but only for the aws branch
   push:
-    branches:
-      - aws
-  pull_request:
     branches:
       - aws
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
     steps:
       # Clone the repo
       - name: Clone repository
@@ -36,7 +32,6 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
     needs: build
     steps:
       # Download the build artifact
